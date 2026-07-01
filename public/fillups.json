@@ -1,0 +1,444 @@
+[
+  {
+    "id": "1",
+    "year": 2025,
+    "month": 6,
+    "day": 4,
+    "totalCost": 24131,
+    "tripKm": 368,
+    "estimated": true
+  },
+  {
+    "id": "2",
+    "year": 2025,
+    "month": 6,
+    "day": 11,
+    "totalCost": 19760,
+    "tripKm": 368,
+    "estimated": true
+  },
+  {
+    "id": "3",
+    "year": 2025,
+    "month": 6,
+    "day": 18,
+    "totalCost": 25034,
+    "liters": 42.43,
+    "tripKm": 480.2
+  },
+  {
+    "id": "4",
+    "year": 2025,
+    "month": 6,
+    "day": 25,
+    "totalCost": 21750,
+    "liters": 36.07,
+    "tripKm": 429.7
+  },
+  {
+    "id": "5",
+    "year": 2025,
+    "month": 7,
+    "day": 2,
+    "totalCost": 11041,
+    "liters": 17.84,
+    "tripKm": 419.2
+  },
+  {
+    "id": "6",
+    "year": 2025,
+    "month": 7,
+    "day": 4,
+    "totalCost": 24373,
+    "liters": 41.45,
+    "tripKm": 328.9
+  },
+  {
+    "id": "7",
+    "year": 2025,
+    "month": 7,
+    "day": 9,
+    "totalCost": 24149,
+    "liters": 41.28,
+    "tripKm": 558.5
+  },
+  {
+    "id": "8",
+    "year": 2025,
+    "month": 7,
+    "day": 23,
+    "totalCost": 24821,
+    "liters": 42.07,
+    "tripKm": 576.5
+  },
+  {
+    "id": "9",
+    "year": 2025,
+    "month": 8,
+    "day": 4,
+    "totalCost": 22740,
+    "liters": 38.74,
+    "tripKm": 502.4
+  },
+  {
+    "id": "10",
+    "year": 2025,
+    "month": 8,
+    "day": 21,
+    "totalCost": 22686,
+    "liters": 39.87,
+    "tripKm": 509.2
+  },
+  {
+    "id": "11",
+    "year": 2025,
+    "month": 8,
+    "day": 29,
+    "totalCost": 22059,
+    "liters": 38.23,
+    "tripKm": 530.8
+  },
+  {
+    "id": "12",
+    "year": 2025,
+    "month": 9,
+    "day": 13,
+    "totalCost": 27143,
+    "liters": 46.24,
+    "tripKm": 588.4
+  },
+  {
+    "id": "13",
+    "year": 2025,
+    "month": 9,
+    "day": 20,
+    "totalCost": 21987,
+    "liters": 37.5,
+    "tripKm": 368,
+    "estimated": true
+  },
+  {
+    "id": "14",
+    "year": 2025,
+    "month": 9,
+    "day": 27,
+    "totalCost": 24318,
+    "liters": 41.57,
+    "tripKm": 543.7
+  },
+  {
+    "id": "15",
+    "year": 2025,
+    "month": 10,
+    "day": 7,
+    "totalCost": 24565,
+    "liters": 42.5,
+    "tripKm": 368,
+    "estimated": true
+  },
+  {
+    "id": "16",
+    "year": 2025,
+    "month": 10,
+    "day": 14,
+    "totalCost": 19226,
+    "liters": 33.85,
+    "tripKm": 89.7
+  },
+  {
+    "id": "17",
+    "year": 2025,
+    "month": 10,
+    "day": 15,
+    "tripKm": 142.8
+  },
+  {
+    "id": "18",
+    "year": 2025,
+    "month": 10,
+    "day": 21,
+    "totalCost": 20480,
+    "liters": 36.9,
+    "tripKm": 293.4
+  },
+  {
+    "id": "19",
+    "year": 2025,
+    "month": 10,
+    "day": 21,
+    "totalCost": 22758,
+    "liters": 34.62,
+    "tripKm": 615.8
+  },
+  {
+    "id": "20",
+    "year": 2025,
+    "month": 10,
+    "day": 23,
+    "tripKm": 512.5
+  },
+  {
+    "id": "21",
+    "year": 2025,
+    "month": 10,
+    "day": 28,
+    "tripKm": 519.9
+  },
+  {
+    "id": "22",
+    "year": 2025,
+    "month": 10,
+    "day": 31,
+    "tripKm": 574.4
+  },
+  {
+    "id": "23",
+    "year": 2025,
+    "month": 10,
+    "day": 31,
+    "totalCost": 20093,
+    "liters": 34.99,
+    "tripKm": 458.1
+  },
+  {
+    "id": "24",
+    "year": 2025,
+    "month": 11,
+    "day": 2,
+    "totalCost": 19800,
+    "tripKm": 538.9
+  },
+  {
+    "id": "25",
+    "year": 2025,
+    "month": 11,
+    "day": 11,
+    "totalCost": 20000,
+    "liters": 36.04,
+    "tripKm": 415.0
+  },
+  {
+    "id": "26",
+    "year": 2025,
+    "month": 11,
+    "day": 19,
+    "totalCost": 27123,
+    "liters": 48.52,
+    "tripKm": 453.9
+  },
+  {
+    "id": "27",
+    "year": 2025,
+    "month": 12,
+    "day": 3,
+    "totalCost": 22099,
+    "liters": 40.18,
+    "tripKm": 356.6
+  },
+  {
+    "id": "28",
+    "year": 2025,
+    "month": 12,
+    "day": 13,
+    "totalCost": 19583,
+    "liters": 35.8,
+    "tripKm": 471.3
+  },
+  {
+    "id": "29",
+    "year": 2025,
+    "month": 12,
+    "day": 21,
+    "totalCost": 23117,
+    "liters": 43.21,
+    "tripKm": 447.0
+  },
+  {
+    "id": "30",
+    "year": 2025,
+    "month": 12,
+    "day": 29,
+    "totalCost": 23401,
+    "liters": 43.74,
+    "tripKm": 561.0
+  },
+  {
+    "id": "31",
+    "year": 2026,
+    "month": 1,
+    "day": 14,
+    "totalCost": 23392,
+    "liters": 43.97,
+    "tripKm": 487.5
+  },
+  {
+    "id": "32",
+    "year": 2026,
+    "month": 1,
+    "day": 23,
+    "totalCost": 23410,
+    "liters": 45.02,
+    "tripKm": 536.9
+  },
+  {
+    "id": "33",
+    "year": 2026,
+    "month": 2,
+    "day": 3,
+    "totalCost": 25527,
+    "tripKm": 555.0
+  },
+  {
+    "id": "34",
+    "year": 2026,
+    "month": 2,
+    "day": 16,
+    "totalCost": 25311,
+    "liters": 46.7,
+    "tripKm": 516.9
+  },
+  {
+    "id": "35",
+    "year": 2026,
+    "month": 2,
+    "day": 26,
+    "totalCost": 24902,
+    "liters": 44.95,
+    "tripKm": 540.9
+  },
+  {
+    "id": "36",
+    "year": 2026,
+    "month": 3,
+    "day": 10,
+    "totalCost": 21819,
+    "tripKm": 558.5
+  },
+  {
+    "id": "37",
+    "year": 2026,
+    "month": 3,
+    "day": 11,
+    "tripKm": 566.1
+  },
+  {
+    "id": "38",
+    "year": 2026,
+    "month": 3,
+    "day": 21,
+    "totalCost": 24838,
+    "liters": 37.35,
+    "tripKm": 444.6
+  },
+  {
+    "id": "39",
+    "year": 2026,
+    "month": 4,
+    "day": 1,
+    "totalCost": 27001,
+    "liters": 45.38,
+    "tripKm": 462.9
+  },
+  {
+    "id": "40",
+    "year": 2026,
+    "month": 4,
+    "day": 15,
+    "totalCost": 23783,
+    "tripKm": 584.0
+  },
+  {
+    "id": "41",
+    "year": 2026,
+    "month": 4,
+    "day": 28,
+    "totalCost": 26614,
+    "liters": 44.73,
+    "tripKm": 491.6,
+    "odometer": 200967
+  },
+  {
+    "id": "42",
+    "year": 2026,
+    "month": 5,
+    "day": 8,
+    "totalCost": 23812,
+    "tripKm": 605.1,
+    "odometer": 201572
+  },
+  {
+    "id": "43",
+    "year": 2026,
+    "month": 5,
+    "day": 18,
+    "totalCost": 25085,
+    "tripKm": 506.8,
+    "odometer": 202079
+  },
+  {
+    "id": "44",
+    "year": 2026,
+    "month": 5,
+    "day": 30,
+    "totalCost": 30598,
+    "tripKm": 619.2,
+    "odometer": 202698
+  },
+  {
+    "id": "45",
+    "year": 2026,
+    "month": 6,
+    "day": 10,
+    "totalCost": 21806,
+    "liters": 36.65,
+    "tripKm": 548.0,
+    "odometer": 203246
+  },
+  {
+    "id": "46",
+    "year": 2026,
+    "month": 6,
+    "day": 14,
+    "totalCost": 27751,
+    "liters": 46.64,
+    "tripKm": 477.4,
+    "odometer": 203723
+  },
+  {
+    "id": "47",
+    "year": 2026,
+    "month": 6,
+    "day": 21,
+    "totalCost": 21878,
+    "liters": 37.85,
+    "tripKm": 579.4,
+    "odometer": 204303
+  },
+  {
+    "id": "48",
+    "year": 2026,
+    "month": 6,
+    "day": 23,
+    "totalCost": 24197,
+    "tripKm": 493.7,
+    "odometer": 204797
+  },
+  {
+    "id": "49",
+    "year": 2026,
+    "month": 6,
+    "day": 26,
+    "liters": 41.08,
+    "tripKm": 504.6,
+    "odometer": 205301
+  },
+  {
+    "id": "50",
+    "year": 2026,
+    "month": 6,
+    "day": 27,
+    "liters": 25.65,
+    "tripKm": 422.9,
+    "odometer": 205724
+  }
+]

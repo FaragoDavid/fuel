@@ -1,0 +1,403 @@
+@import 'tailwindcss';
+
+@layer theme {
+  :root {
+    /* Brand */
+    --color-primary: var(--color-teal-600);
+    --color-primary-hover: var(--color-teal-700);
+    --color-primary-subtle: var(--color-teal-50);
+    --color-primary-muted: var(--color-teal-100);
+
+    /* Surfaces */
+    --color-page-bg: var(--color-teal-950);
+    --color-card-bg: #fce8cc;
+    --color-header-bg: var(--color-teal-800);
+    --color-header-text: #e8903a;
+    --color-stat-bg: var(--color-teal-700);
+    --color-stat-text: #fce8cc;
+    --color-stat-label: #7fd8d0;
+    --color-table-header-bg: var(--color-teal-600);
+    --color-table-header-text: var(--color-teal-50);
+    --color-table-bg: var(--color-teal-800);
+    --color-table-row-even: var(--color-teal-800);
+    --color-table-row-odd: var(--color-teal-750, #0d5e59);
+    --color-table-text: #fce8cc;
+    --color-table-text-muted: #e0b48a;
+    --color-table-text-dim: #d4b890;
+
+    /* Modal */
+    --color-modal-bg: #2a1205;
+    --color-modal-text: #fce8cc;
+    --color-modal-label: #e8903a;
+    --color-input-bg: #1a0c03;
+    --color-input-text: #fce8cc;
+    --color-input-border: #c4680e;
+
+    /* Text */
+    --color-text: #2a1205;
+    --color-text-muted: #a0521a;
+    --color-text-dim: #c47840;
+
+    /* Borders */
+    --color-border: #e8b87a;
+    --color-border-input: #c4680e;
+
+    /* Chart */
+    --chart-color: #e8903a;
+    --chart-trend: #fce8cc;
+    --chart-grid: #1f6b66;
+    --chart-axis: #1f6b66;
+    --chart-label: #7fb9b5;
+    --chart-label-dim: #5a9e9a;
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--color-page-bg);
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221920%22%20height%3D%221080%22%3E%3Cg%20transform%3D%22translate%28887%2C541%29%20rotate%2813.4%2C22.5%2C22.5%29%20scale%281.8750%29%22%20opacity%3D%220.16%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202c0%200-5%205-5%2010a5%205%200%200010%200c0-3-2-5-2-5s0%203-3%203c0%200%202-4%200-8z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28153%2C573%29%20rotate%28-8.1%2C79.0%2C79.0%29%20scale%286.5833%29%22%20opacity%3D%220.11%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2017H3a2%202%200%2001-2-2V9a2%202%200%20012-2h1l3-4h8l3%204h1a2%202%200%20012%202v6a2%202%200%2001-2%202h-2%22%2F%3E%3Ccircle%20cx%3D%227.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Ccircle%20cx%3D%2216.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Cpath%20d%3D%22M7.5%207h9%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%2825%2C537%29%20rotate%28-22.3%2C73.0%2C73.0%29%20scale%286.0833%29%22%20opacity%3D%220.13%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202c0%200-5%205-5%2010a5%205%200%200010%200c0-3-2-5-2-5s0%203-3%203c0%200%202-4%200-8z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281153%2C803%29%20rotate%28-5.7%2C118.0%2C118.0%29%20scale%289.8333%29%22%20opacity%3D%220.11%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28996%2C415%29%20rotate%2810.7%2C70.0%2C70.0%29%20scale%285.8333%29%22%20opacity%3D%220.1%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%228%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%208V4h6v4%22%2F%3E%3Cpath%20d%3D%22M11%2017v-4%22%2F%3E%3Cpath%20d%3D%22M8%2013h6%22%2F%3E%3Cpath%20d%3D%22M20%2010l3%203v5a2%202%200%2001-2%202h-1%22%2F%3E%3Cpath%20d%3D%22M20%2010v-3a1%201%200%2000-1-1h-1%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281445%2C529%29%20rotate%28-16.0%2C36.0%2C36.0%29%20scale%283.0000%29%22%20opacity%3D%220.1%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017l3-14h12l3%2014%22%2F%3E%3Cpath%20d%3D%22M9%203l-1%207%22%2F%3E%3Cpath%20d%3D%22M15%203l1%207%22%2F%3E%3Cpath%20d%3D%22M5%2017h14%22%2F%3E%3Cpath%20d%3D%22M11%2010h2%22%2F%3E%3Cpath%20d%3D%22M10%2013h4%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281210%2C275%29%20rotate%287.9%2C147.0%2C147.0%29%20scale%2812.2500%29%22%20opacity%3D%220.09%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202c0%200-5%205-5%2010a5%205%200%200010%200c0-3-2-5-2-5s0%203-3%203c0%200%202-4%200-8z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281644%2C702%29%20rotate%281.3%2C20.0%2C20.0%29%20scale%281.6667%29%22%20opacity%3D%220.1%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017A9%209%200%200121%2017%22%2F%3E%3Cpath%20d%3D%22M12%208v2%22%2F%3E%3Cpath%20d%3D%22M6.3%2011.3l1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M17.7%2011.3l-1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M12%2017l2.5-4.5%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281270%2C212%29%20rotate%28-7.8%2C31.0%2C31.0%29%20scale%282.5833%29%22%20opacity%3D%220.14%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017l3-14h12l3%2014%22%2F%3E%3Cpath%20d%3D%22M9%203l-1%207%22%2F%3E%3Cpath%20d%3D%22M15%203l1%207%22%2F%3E%3Cpath%20d%3D%22M5%2017h14%22%2F%3E%3Cpath%20d%3D%22M11%2010h2%22%2F%3E%3Cpath%20d%3D%22M10%2013h4%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28355%2C143%29%20rotate%28-12.4%2C22.0%2C22.0%29%20scale%281.8333%29%22%20opacity%3D%220.09%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281128%2C298%29%20rotate%280.4%2C27.5%2C27.5%29%20scale%282.2917%29%22%20opacity%3D%220.14%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281722%2C871%29%20rotate%2816.9%2C32.5%2C32.5%29%20scale%282.7083%29%22%20opacity%3D%220.13%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%228%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%208V4h6v4%22%2F%3E%3Cpath%20d%3D%22M11%2017v-4%22%2F%3E%3Cpath%20d%3D%22M8%2013h6%22%2F%3E%3Cpath%20d%3D%22M20%2010l3%203v5a2%202%200%2001-2%202h-1%22%2F%3E%3Cpath%20d%3D%22M20%2010v-3a1%201%200%2000-1-1h-1%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281058%2C33%29%20rotate%289.8%2C97.0%2C97.0%29%20scale%288.0833%29%22%20opacity%3D%220.12%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017l3-14h12l3%2014%22%2F%3E%3Cpath%20d%3D%22M9%203l-1%207%22%2F%3E%3Cpath%20d%3D%22M15%203l1%207%22%2F%3E%3Cpath%20d%3D%22M5%2017h14%22%2F%3E%3Cpath%20d%3D%22M11%2010h2%22%2F%3E%3Cpath%20d%3D%22M10%2013h4%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28945%2C697%29%20rotate%28-23.9%2C56.5%2C56.5%29%20scale%284.7083%29%22%20opacity%3D%220.09%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28412%2C404%29%20rotate%28-22.7%2C144.0%2C144.0%29%20scale%2812.0000%29%22%20opacity%3D%220.15%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017l3-14h12l3%2014%22%2F%3E%3Cpath%20d%3D%22M9%203l-1%207%22%2F%3E%3Cpath%20d%3D%22M15%203l1%207%22%2F%3E%3Cpath%20d%3D%22M5%2017h14%22%2F%3E%3Cpath%20d%3D%22M11%2010h2%22%2F%3E%3Cpath%20d%3D%22M10%2013h4%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281805%2C395%29%20rotate%2811.1%2C49.0%2C49.0%29%20scale%284.0833%29%22%20opacity%3D%220.16%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281375%2C124%29%20rotate%28-18.4%2C48.0%2C48.0%29%20scale%284.0000%29%22%20opacity%3D%220.15%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281687%2C411%29%20rotate%2821.9%2C48.5%2C48.5%29%20scale%284.0417%29%22%20opacity%3D%220.14%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202c0%200-5%205-5%2010a5%205%200%200010%200c0-3-2-5-2-5s0%203-3%203c0%200%202-4%200-8z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281662%2C257%29%20rotate%2817.9%2C80.5%2C80.5%29%20scale%286.7083%29%22%20opacity%3D%220.13%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28630%2C367%29%20rotate%28-9.6%2C51.0%2C51.0%29%20scale%284.2500%29%22%20opacity%3D%220.16%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2017H3a2%202%200%2001-2-2V9a2%202%200%20012-2h1l3-4h8l3%204h1a2%202%200%20012%202v6a2%202%200%2001-2%202h-2%22%2F%3E%3Ccircle%20cx%3D%227.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Ccircle%20cx%3D%2216.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Cpath%20d%3D%22M7.5%207h9%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281670%2C512%29%20rotate%28-2.0%2C130.0%2C130.0%29%20scale%2810.8333%29%22%20opacity%3D%220.1%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28756%2C133%29%20rotate%28-5.3%2C31.0%2C31.0%29%20scale%282.5833%29%22%20opacity%3D%220.11%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281434%2C987%29%20rotate%2813.7%2C48.0%2C48.0%29%20scale%284.0000%29%22%20opacity%3D%220.09%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202c0%200-5%205-5%2010a5%205%200%200010%200c0-3-2-5-2-5s0%203-3%203c0%200%202-4%200-8z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28626%2C727%29%20rotate%28-23.7%2C76.5%2C76.5%29%20scale%286.3750%29%22%20opacity%3D%220.1%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202c0%200-5%205-5%2010a5%205%200%200010%200c0-3-2-5-2-5s0%203-3%203c0%200%202-4%200-8z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281718%2C73%29%20rotate%2823.1%2C82.0%2C82.0%29%20scale%286.8333%29%22%20opacity%3D%220.1%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017l3-14h12l3%2014%22%2F%3E%3Cpath%20d%3D%22M9%203l-1%207%22%2F%3E%3Cpath%20d%3D%22M15%203l1%207%22%2F%3E%3Cpath%20d%3D%22M5%2017h14%22%2F%3E%3Cpath%20d%3D%22M11%2010h2%22%2F%3E%3Cpath%20d%3D%22M10%2013h4%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28235%2C791%29%20rotate%288.2%2C75.5%2C75.5%29%20scale%286.2917%29%22%20opacity%3D%220.12%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2017H3a2%202%200%2001-2-2V9a2%202%200%20012-2h1l3-4h8l3%204h1a2%202%200%20012%202v6a2%202%200%2001-2%202h-2%22%2F%3E%3Ccircle%20cx%3D%227.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Ccircle%20cx%3D%2216.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Cpath%20d%3D%22M7.5%207h9%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28833%2C104%29%20rotate%28-23.7%2C74.0%2C74.0%29%20scale%286.1667%29%22%20opacity%3D%220.13%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%228%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%208V4h6v4%22%2F%3E%3Cpath%20d%3D%22M11%2017v-4%22%2F%3E%3Cpath%20d%3D%22M8%2013h6%22%2F%3E%3Cpath%20d%3D%22M20%2010l3%203v5a2%202%200%2001-2%202h-1%22%2F%3E%3Cpath%20d%3D%22M20%2010v-3a1%201%200%2000-1-1h-1%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281329%2C674%29%20rotate%28-11.3%2C89.5%2C89.5%29%20scale%287.4583%29%22%20opacity%3D%220.1%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017A9%209%200%200121%2017%22%2F%3E%3Cpath%20d%3D%22M12%208v2%22%2F%3E%3Cpath%20d%3D%22M6.3%2011.3l1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M17.7%2011.3l-1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M12%2017l2.5-4.5%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281586%2C168%29%20rotate%28-17.7%2C27.5%2C27.5%29%20scale%282.2917%29%22%20opacity%3D%220.12%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017A9%209%200%200121%2017%22%2F%3E%3Cpath%20d%3D%22M12%208v2%22%2F%3E%3Cpath%20d%3D%22M6.3%2011.3l1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M17.7%2011.3l-1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M12%2017l2.5-4.5%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28439%2C820%29%20rotate%28-4.5%2C39.0%2C39.0%29%20scale%283.2500%29%22%20opacity%3D%220.09%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28421%2C3%29%20rotate%2811.2%2C85.5%2C85.5%29%20scale%287.1250%29%22%20opacity%3D%220.1%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%228%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%208V4h6v4%22%2F%3E%3Cpath%20d%3D%22M11%2017v-4%22%2F%3E%3Cpath%20d%3D%22M8%2013h6%22%2F%3E%3Cpath%20d%3D%22M20%2010l3%203v5a2%202%200%2001-2%202h-1%22%2F%3E%3Cpath%20d%3D%22M20%2010v-3a1%201%200%2000-1-1h-1%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281382%2C5%29%20rotate%286.8%2C59.0%2C59.0%29%20scale%284.9167%29%22%20opacity%3D%220.15%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28744%2C456%29%20rotate%289.0%2C77.0%2C77.0%29%20scale%286.4167%29%22%20opacity%3D%220.14%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2017H3a2%202%200%2001-2-2V9a2%202%200%20012-2h1l3-4h8l3%204h1a2%202%200%20012%202v6a2%202%200%2001-2%202h-2%22%2F%3E%3Ccircle%20cx%3D%227.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Ccircle%20cx%3D%2216.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Cpath%20d%3D%22M7.5%207h9%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%2867%2C173%29%20rotate%287.0%2C39.5%2C39.5%29%20scale%283.2917%29%22%20opacity%3D%220.1%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2017H3a2%202%200%2001-2-2V9a2%202%200%20012-2h1l3-4h8l3%204h1a2%202%200%20012%202v6a2%202%200%2001-2%202h-2%22%2F%3E%3Ccircle%20cx%3D%227.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Ccircle%20cx%3D%2216.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Cpath%20d%3D%22M7.5%207h9%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281611%2C9%29%20rotate%28-14.9%2C48.0%2C48.0%29%20scale%284.0000%29%22%20opacity%3D%220.14%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017A9%209%200%200121%2017%22%2F%3E%3Cpath%20d%3D%22M12%208v2%22%2F%3E%3Cpath%20d%3D%22M6.3%2011.3l1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M17.7%2011.3l-1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M12%2017l2.5-4.5%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281538%2C928%29%20rotate%2812.1%2C81.0%2C81.0%29%20scale%286.7500%29%22%20opacity%3D%220.15%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281514%2C646%29%20rotate%2818.1%2C28.5%2C28.5%29%20scale%282.3750%29%22%20opacity%3D%220.09%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2017H3a2%202%200%2001-2-2V9a2%202%200%20012-2h1l3-4h8l3%204h1a2%202%200%20012%202v6a2%202%200%2001-2%202h-2%22%2F%3E%3Ccircle%20cx%3D%227.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Ccircle%20cx%3D%2216.5%22%20cy%3D%2217%22%20r%3D%222.5%22%2F%3E%3Cpath%20d%3D%22M7.5%207h9%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28229%2C-11%29%20rotate%282.7%2C61.5%2C61.5%29%20scale%285.1250%29%22%20opacity%3D%220.12%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017l3-14h12l3%2014%22%2F%3E%3Cpath%20d%3D%22M9%203l-1%207%22%2F%3E%3Cpath%20d%3D%22M15%203l1%207%22%2F%3E%3Cpath%20d%3D%22M5%2017h14%22%2F%3E%3Cpath%20d%3D%22M11%2010h2%22%2F%3E%3Cpath%20d%3D%22M10%2013h4%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28274%2C261%29%20rotate%2815.3%2C51.5%2C51.5%29%20scale%284.2917%29%22%20opacity%3D%220.11%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202c0%200-5%205-5%2010a5%205%200%200010%200c0-3-2-5-2-5s0%203-3%203c0%200%202-4%200-8z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28724%2C813%29%20rotate%2813.9%2C114.5%2C114.5%29%20scale%289.5417%29%22%20opacity%3D%220.1%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%228%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%208V4h6v4%22%2F%3E%3Cpath%20d%3D%22M11%2017v-4%22%2F%3E%3Cpath%20d%3D%22M8%2013h6%22%2F%3E%3Cpath%20d%3D%22M20%2010l3%203v5a2%202%200%2001-2%202h-1%22%2F%3E%3Cpath%20d%3D%22M20%2010v-3a1%201%200%2000-1-1h-1%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281824%2C1039%29%20rotate%28-4.9%2C22.5%2C22.5%29%20scale%281.8750%29%22%20opacity%3D%220.16%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017A9%209%200%200121%2017%22%2F%3E%3Cpath%20d%3D%22M12%208v2%22%2F%3E%3Cpath%20d%3D%22M6.3%2011.3l1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M17.7%2011.3l-1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M12%2017l2.5-4.5%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281876%2C28%29%20rotate%28-9.9%2C20.5%2C20.5%29%20scale%281.7083%29%22%20opacity%3D%220.14%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017A9%209%200%200121%2017%22%2F%3E%3Cpath%20d%3D%22M12%208v2%22%2F%3E%3Cpath%20d%3D%22M6.3%2011.3l1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M17.7%2011.3l-1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M12%2017l2.5-4.5%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28317%2C644%29%20rotate%28-13.2%2C80.0%2C80.0%29%20scale%286.6667%29%22%20opacity%3D%220.16%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202c0%200-5%205-5%2010a5%205%200%200010%200c0-3-2-5-2-5s0%203-3%203c0%200%202-4%200-8z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28887%2C305%29%20rotate%284.3%2C78.5%2C78.5%29%20scale%286.5417%29%22%20opacity%3D%220.09%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017A9%209%200%200121%2017%22%2F%3E%3Cpath%20d%3D%22M12%208v2%22%2F%3E%3Cpath%20d%3D%22M6.3%2011.3l1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M17.7%2011.3l-1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M12%2017l2.5-4.5%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281628%2C855%29%20rotate%28-16.1%2C39.0%2C39.0%29%20scale%283.2500%29%22%20opacity%3D%220.12%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%228%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%208V4h6v4%22%2F%3E%3Cpath%20d%3D%22M11%2017v-4%22%2F%3E%3Cpath%20d%3D%22M8%2013h6%22%2F%3E%3Cpath%20d%3D%22M20%2010l3%203v5a2%202%200%2001-2%202h-1%22%2F%3E%3Cpath%20d%3D%22M20%2010v-3a1%201%200%2000-1-1h-1%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281069%2C278%29%20rotate%2811.5%2C32.5%2C32.5%29%20scale%282.7083%29%22%20opacity%3D%220.11%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017l3-14h12l3%2014%22%2F%3E%3Cpath%20d%3D%22M9%203l-1%207%22%2F%3E%3Cpath%20d%3D%22M15%203l1%207%22%2F%3E%3Cpath%20d%3D%22M5%2017h14%22%2F%3E%3Cpath%20d%3D%22M11%2010h2%22%2F%3E%3Cpath%20d%3D%22M10%2013h4%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281235%2C553%29%20rotate%28-4.9%2C66.0%2C66.0%29%20scale%285.5000%29%22%20opacity%3D%220.1%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202c0%200-5%205-5%2010a5%205%200%200010%200c0-3-2-5-2-5s0%203-3%203c0%200%202-4%200-8z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28442%2C283%29%20rotate%28-1.9%2C34.0%2C34.0%29%20scale%282.8333%29%22%20opacity%3D%220.13%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M3%2017A9%209%200%200121%2017%22%2F%3E%3Cpath%20d%3D%22M12%208v2%22%2F%3E%3Cpath%20d%3D%22M6.3%2011.3l1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M17.7%2011.3l-1.4%201.4%22%2F%3E%3Cpath%20d%3D%22M12%2017l2.5-4.5%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281164%2C628%29%20rotate%284.8%2C23.5%2C23.5%29%20scale%281.9583%29%22%20opacity%3D%220.11%22%20fill%3D%22%232dd4bf%22%3E%3Cpath%20d%3D%22M12%202C12%202%204%2010%204%2015a8%208%200%200016%200c0-5-8-13-8-13z%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28597%2C271%29%20rotate%2817.6%2C48.5%2C48.5%29%20scale%284.0417%29%22%20opacity%3D%220.1%22%20fill%3D%22none%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%222%22%20y%3D%228%22%20width%3D%2218%22%20height%3D%2222%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%208V4h6v4%22%2F%3E%3Cpath%20d%3D%22M11%2017v-4%22%2F%3E%3Cpath%20d%3D%22M8%2013h6%22%2F%3E%3Cpath%20d%3D%22M20%2010l3%203v5a2%202%200%2001-2%202h-1%22%2F%3E%3Cpath%20d%3D%22M20%2010v-3a1%201%200%2000-1-1h-1%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: var(--color-text);
+  }
+}
+
+@layer components {
+  /* Layout */
+  .page {
+    min-height: 100vh;
+    padding: calc(var(--spacing) * 4);
+  }
+
+  @media (min-width: 640px) {
+    .page {
+      padding: calc(var(--spacing) * 6);
+    }
+  }
+
+  .page-inner {
+    max-width: var(--container-5xl);
+    margin-inline: auto;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: calc(var(--spacing) * 6);
+    padding: calc(var(--spacing) * 4) calc(var(--spacing) * 5);
+    background-color: var(--color-header-bg);
+    border-radius: var(--radius-2xl);
+  }
+
+  .page-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-header-text);
+  }
+
+  /* Cards */
+  .card {
+    background-color: var(--color-card-bg);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .table-card {
+    background-color: var(--color-table-bg);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .table-header-cell:first-child {
+    border-radius: var(--radius-2xl) 0 0 0;
+  }
+
+  .table-header-cell:last-child {
+    border-radius: 0 var(--radius-2xl) 0 0;
+  }
+
+  .table-row:last-child td:first-child {
+    border-radius: 0 0 0 var(--radius-2xl);
+  }
+
+  .table-row:last-child td:last-child {
+    border-radius: 0 0 var(--radius-2xl) 0;
+  }
+
+  .table-card table {
+    width: 100%;
+    font-size: var(--text-sm);
+  }
+
+  .table-cell-actions {
+    padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 2);
+    display: flex;
+    gap: calc(var(--spacing) * 1);
+    justify-content: flex-end;
+  }
+
+  .stat-card {
+    background-color: var(--color-stat-bg);
+    border-radius: var(--radius-xl);
+    padding: calc(var(--spacing) * 4);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .stat-label {
+    font-size: var(--text-xs);
+    color: var(--color-stat-label);
+    margin-bottom: calc(var(--spacing) * 1);
+  }
+
+  .stat-value {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-stat-text);
+  }
+
+  /* Overlay + modal */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgb(0 0 0 / 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: calc(var(--spacing) * 4);
+  }
+
+  .modal {
+    background-color: var(--color-modal-bg);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    width: 100%;
+  }
+
+  .modal-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-modal-text);
+    margin-bottom: calc(var(--spacing) * 4);
+  }
+
+  .confirm-text {
+    color: var(--color-modal-text);
+    margin-bottom: calc(var(--spacing) * 4);
+  }
+
+  /* Buttons */
+  .btn-primary {
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    background-color: var(--color-teal-700);
+    color: #fce8cc;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-teal-600);
+  }
+
+  .btn-secondary {
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-primary-muted);
+  }
+
+  .btn-danger {
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    background-color: var(--color-red-500);
+    color: #fce8cc;
+  }
+
+  .btn-danger:hover {
+    background-color: var(--color-red-600);
+  }
+
+  .btn-icon {
+    padding: calc(var(--spacing) * 1);
+    border-radius: var(--radius-sm);
+    color: var(--color-teal-300);
+  }
+
+  .btn-icon:hover {
+    background-color: var(--color-teal-700);
+  }
+
+  /* Chart tabs */
+  .chart-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--spacing) * 1);
+    padding: calc(var(--spacing) * 2);
+    background-color: var(--color-teal-800);
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  }
+
+  .tab-btn {
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 3);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    color: var(--color-teal-200);
+    transition: background-color 150ms;
+  }
+
+  .tab-btn:hover {
+    background-color: var(--color-teal-700);
+  }
+
+  .tab-btn-active {
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 3);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    background-color: var(--color-teal-600);
+    color: #fce8cc;
+  }
+
+  .chart-body {
+    padding: calc(var(--spacing) * 4);
+    background-color: var(--color-teal-800);
+    border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+  }
+
+  /* Form */
+  .form-field {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+  }
+
+  .form-label {
+    font-size: var(--text-sm);
+    color: var(--color-modal-label);
+    width: calc(var(--spacing) * 28);
+    flex-shrink: 0;
+  }
+
+  .form-input {
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-lg);
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 3);
+    font-size: var(--text-sm);
+    width: 100%;
+    background-color: var(--color-input-bg);
+    color: var(--color-input-text);
+  }
+
+  .form-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-teal-300);
+  }
+
+  /* Banners */
+  .error-banner {
+    margin-bottom: calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4);
+    background-color: var(--color-red-50);
+    color: var(--color-red-700);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+  }
+
+  .loading-text {
+    font-size: var(--text-sm);
+    color: var(--color-teal-300);
+    padding: calc(var(--spacing) * 4) 0;
+  }
+
+  .saving-text {
+    margin-top: calc(var(--spacing) * 3);
+    font-size: var(--text-xs);
+    color: var(--color-teal-300);
+  }
+
+  /* Estimated / derived values */
+  .estimated {
+    font-style: italic;
+    opacity: 0.6;
+  }
+
+  @keyframes row-highlight {
+    0% {
+      background-color: var(--color-teal-400);
+    }
+    100% {
+      background-color: inherit;
+    }
+  }
+
+  .row-highlighted {
+    animation: row-highlight 2.5s ease-out;
+  }
+
+  /* Table rows */
+  .table-header-row {
+    text-align: left;
+    font-size: var(--text-xs);
+    color: var(--color-table-header-text);
+    background-color: var(--color-table-header-bg);
+  }
+
+  .table-header-cell {
+    padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4);
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    background-color: var(--color-table-header-bg);
+    z-index: 1;
+  }
+
+  .table-cell {
+    padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
+    text-align: right;
+    color: var(--color-table-text);
+  }
+
+  .table-cell-date {
+    padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
+    color: var(--color-table-text);
+    white-space: nowrap;
+  }
+
+  .table-cell-muted {
+    padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
+    text-align: right;
+    color: var(--color-table-text-muted);
+  }
+
+  .table-cell-dim {
+    padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
+    text-align: right;
+    color: var(--color-table-text-dim);
+  }
+
+  .table-cell-actions {
+    padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 2);
+  }
+
+  .table-row {
+    border-bottom: 1px solid var(--color-teal-700);
+  }
+
+  .table-row:hover {
+    background-color: var(--color-teal-700);
+  }
+
+  .table-row:nth-child(even) {
+    background-color: var(--color-table-row-even);
+  }
+
+  .table-row:nth-child(odd) {
+    background-color: var(--color-table-row-odd);
+  }
+}
