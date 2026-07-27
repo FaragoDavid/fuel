@@ -1,14 +1,17 @@
-import { useEffect, useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
-import type { Fillup } from './types/fillup';
-import { readFillups, writeFillups } from './services/github';
-import { compareFillups } from './utils/sort';
-import { formatDate } from './utils/format';
-import StatsStrip from './components/StatsStrip';
-import FillupTable from './components/FillupTable';
+import { useEffect, useMemo, useState } from 'react';
+
 import FillupDialog from './components/FillupDialog';
-import ScatterChart from './components/ScatterChart';
+import FillupTable from './components/FillupTable';
+import Login from './components/Login';
 import MonthlySpendChart from './components/MonthlySpendChart';
+import ScatterChart from './components/ScatterChart';
+import StatsStrip from './components/StatsStrip';
+import type { Store } from './data/store';
+import { useAuth } from './services/auth';
+import type { Fillup } from './types/fillup';
+import { formatDate } from './utils/format';
+import { compareFillups } from './utils/sort';
 
 type DialogState = { mode: 'add' } | { mode: 'edit'; fillup: Fillup } | null;
 
@@ -27,7 +30,8 @@ function toTimestamp({ year, month, day }: Fillup): number {
   return new Date(year, month - 1, day).getTime();
 }
 
-export default function App() {
+export default function App({ store }: { store: Store }) {
+  const user = useAuth();
   const [fillups, setFillups] = useState<Fillup[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -99,26 +103,36 @@ export default function App() {
   }
 
   useEffect(() => {
-    readFillups()
+    if (!user) return;
+    store
+      .readFillups()
       .then(setFillups)
       .catch((error) => setError(error.message));
-  }, []);
+  }, [user]);
 
   function scrollToId(id: string) {
     const row = document.querySelector<HTMLElement>(`tr[data-id="${id}"]`);
     if (!row) return;
     row.scrollIntoView({ behavior: 'smooth', block: 'center' });
     row.classList.remove('row-highlighted');
-    void row.offsetWidth; // force reflow to restart animation
+    void row.offsetWidth;
     row.classList.add('row-highlighted');
   }
 
-  async function save(next: Fillup[]) {
+  async function handleSave(fillup: Fillup) {
+    if (!fillups) return;
+    setDialog(null);
     setSaving(true);
     setError(null);
     try {
-      await writeFillups(next);
-      setFillups(next);
+      if (dialog?.mode === 'edit') {
+        await store.updateFillup(fillup);
+        setFillups(fillups.map((existing) => (existing.id === fillup.id ? fillup : existing)));
+      } else {
+        const { id: _ignored, ...data } = fillup;
+        const newId = await store.addFillup(data);
+        setFillups([...fillups, { ...data, id: newId }]);
+      }
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Mentési hiba');
     } finally {
@@ -126,21 +140,23 @@ export default function App() {
     }
   }
 
-  function handleSave(fillup: Fillup) {
+  async function handleDelete(id: string) {
     if (!fillups) return;
-    const next =
-      dialog?.mode === 'edit'
-        ? fillups.map((existing) => (existing.id === fillup.id ? fillup : existing))
-        : [...fillups, { ...fillup, id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}` }];
-    setDialog(null);
-    save(next);
+    setSaving(true);
+    setError(null);
+    try {
+      await store.deleteFillup(id);
+      setFillups(fillups.filter((fillup) => fillup.id !== id));
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Törlési hiba');
+    } finally {
+      setSaving(false);
+      setDeleteId(null);
+    }
   }
 
-  function handleDelete(id: string) {
-    if (!fillups) return;
-    save(fillups.filter((fillup) => fillup.id !== id));
-    setDeleteId(null);
-  }
+  if (user === undefined) return <div className="loading-text">Betöltés…</div>;
+  if (user === null) return <Login />;
 
   return (
     <div className="page">
