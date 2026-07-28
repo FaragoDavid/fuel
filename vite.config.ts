@@ -1,16 +1,17 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss()],
-  base: mode === "production" ? "/fuel/" : "/",
-  root: "src",
-  envDir: "..",
-  publicDir: "../public",
+  base: mode === 'production' ? '/fuel/' : '/',
+  root: 'src',
+  envDir: '..',
+  publicDir: '../public',
   build: {
-    outDir: "../docs",
+    outDir: '../docs',
     emptyOutDir: true,
+    chunkSizeWarningLimit: 800,
   },
   server: {
     port: 5174,
