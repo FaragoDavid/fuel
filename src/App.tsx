@@ -7,6 +7,7 @@ import Login from './components/Login';
 import MonthlySpendChart from './components/MonthlySpendChart';
 import ScatterChart from './components/ScatterChart';
 import StatsStrip from './components/StatsStrip';
+import TravelDistanceChart from './components/TravelDistanceChart';
 import { useStore } from './data/store';
 import { useAuth } from './services/auth';
 import type { Fillup } from './types/fillup';
@@ -20,6 +21,7 @@ const CHART_VIEWS = [
   { key: 'ftl', label: 'Üzemanyagár', yUnit: 'Ft/l', yDecimals: 0 },
   { key: 'ftkm', label: 'Kilométerköltség', yUnit: 'Ft/km', yDecimals: 0 },
   { key: 'monthly', label: 'Havi költség', yUnit: '', yDecimals: 0 },
+  { key: 'distance', label: 'Megtett km', yUnit: '', yDecimals: 0 },
 ] as const;
 
 type ChartView = (typeof CHART_VIEWS)[number]['key'];
@@ -192,6 +194,8 @@ export default function App() {
               <div className="chart-body">
                 {chartView === 'monthly' ? (
                   <MonthlySpendChart fillups={sortedFillups} />
+                ) : chartView === 'distance' ? (
+                  <TravelDistanceChart fillups={sortedFillups} />
                 ) : (
                   <ScatterChart
                     points={scatterPoints[chartView]}
