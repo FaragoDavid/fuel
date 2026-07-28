@@ -2,6 +2,11 @@ import type { Fillup } from '../types/fillup';
 import { CACHE_KEY, type Store } from './store';
 
 function read(): Fillup[] {
+  if (import.meta.env.VITE_MOCK_FILLUPS) {
+    const records = JSON.parse(import.meta.env.VITE_MOCK_FILLUPS) as Fillup[];
+    localStorage.setItem(CACHE_KEY, JSON.stringify(records));
+    return records;
+  }
   const raw = localStorage.getItem(CACHE_KEY);
   return raw ? (JSON.parse(raw) as Fillup[]) : [];
 }
