@@ -66,17 +66,17 @@ function calculatePeriods(fillups: Fillup[], granularity: Granularity): PeriodTo
 
 function buildBars(periods: PeriodTotal[], granularity: Granularity, xStep: number, barW: number): Omit<Bar, 'top'>[] {
   return periods.map(({ key, total }, index) => {
+    const xLabel = granularity === 'weekly' ? weekStartLabel(key) : MONTHS[parseInt(key.slice(5)) - 1];
     const label =
       granularity === 'weekly'
-        ? `${key.slice(0, 4)} W${key.slice(6)}: ${total.toLocaleString('hu-HU')} km`
+        ? `${xLabel}: ${total.toLocaleString('hu-HU')} km`
         : `${key.slice(0, 4)}. ${MONTHS[parseInt(key.slice(5)) - 1]} ${total.toLocaleString('hu-HU')} km`;
-    const xLabel = granularity === 'weekly' ? weekStartLabel(key) : MONTHS[parseInt(key.slice(5)) - 1];
     return { cx: PAD.left + xStep * index + xStep / 2, barW, total, label, key, xLabel };
   });
 }
 
 function buildRollingAverages(periods: PeriodTotal[], recentN: number): number[] {
-  return periods.map(({ total }, index) => {
+  return periods.map((_, index) => {
     const slice = periods.slice(Math.max(0, index - recentN + 1), index + 1);
     return slice.reduce((sum, { total: sliceTotal }) => sum + sliceTotal, 0) / slice.length;
   });
