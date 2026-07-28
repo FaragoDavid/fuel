@@ -7,7 +7,7 @@ import Login from './components/Login';
 import MonthlySpendChart from './components/MonthlySpendChart';
 import ScatterChart from './components/ScatterChart';
 import StatsStrip from './components/StatsStrip';
-import type { Store } from './data/store';
+import { useStore } from './data/store';
 import { useAuth } from './services/auth';
 import type { Fillup } from './types/fillup';
 import { formatDate } from './utils/format';
@@ -30,7 +30,8 @@ function toTimestamp({ year, month, day }: Fillup): number {
   return new Date(year, month - 1, day).getTime();
 }
 
-export default function App({ store }: { store: Store }) {
+export default function App() {
+  const store = useStore();
   const user = useAuth();
   const [fillups, setFillups] = useState<Fillup[] | null>(null);
   const [error, setError] = useState<string | null>(null);
