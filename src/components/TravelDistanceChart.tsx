@@ -218,8 +218,8 @@ export default function TravelDistanceChart({ fillups }: Props) {
         <select
           value={selectedYear ?? ''}
           onChange={(e) => handleYearChange(e.target.value === '' ? null : parseInt(e.target.value))}
-          className="btn-secondary"
-          style={{ marginLeft: 'auto' }}
+          className="tab-btn"
+          style={{ marginLeft: 'auto', backgroundColor: 'transparent' }}
         >
           <option value="">Összes év</option>
           {availableYears.map((year) => (
