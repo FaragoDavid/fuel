@@ -1,3 +1,25 @@
+# macOS
+.DS_Store
+
+# Node.js
 node_modules/
+
+# Build output
+docs/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment
 .env
 .env.local
+.env.development
+
+# Firebase
+.firebaserc
+firebase-debug.log
+firestore-debug.log
