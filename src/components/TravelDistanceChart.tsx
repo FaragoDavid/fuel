@@ -12,8 +12,6 @@ const INNER_H = HEIGHT - PAD.top - PAD.bottom;
 const TOOLTIP_W = 140;
 const TOOLTIP_GAP = 12;
 const BAR_GAP = 4;
-const LABEL_SKIP_EVERY_2_THRESHOLD = 18;
-const LABEL_SKIP_EVERY_4_THRESHOLD = 36;
 const STORED_YEAR_KEY = 'fuel_distance_year';
 
 type Granularity = 'weekly' | 'monthly';
@@ -92,6 +90,13 @@ function buildYearLines(periods: PeriodTotal[], xStep: number): { x: number; yea
   return yearLines;
 }
 
+function calculateLabelStep(barCount: number): number {
+  if (barCount > 48) return 8;
+  if (barCount > 24) return 4;
+  if (barCount > 12) return 2;
+  return 1;
+}
+
 function renderGridLines(gridLines: { tick: number; cy: number }[], baseline: number) {
   return gridLines.map(({ tick, cy }) => {
     if (cy < PAD.top - 4 || cy > baseline + 4) return null;
@@ -118,7 +123,7 @@ function renderYearLines(yearLines: { x: number; year: number }[], baseline: num
 }
 
 function renderBars(bars: Bar[], baseline: number, setTooltip: (tooltip: { x: number; y: number; text: string } | null) => void) {
-  const labelStep = bars.length > LABEL_SKIP_EVERY_4_THRESHOLD ? 4 : bars.length > LABEL_SKIP_EVERY_2_THRESHOLD ? 2 : 1;
+  const labelStep = calculateLabelStep(bars.length);
   return bars.map(({ key, cx, top, barW, label, xLabel }, index) => (
     <g key={key} onMouseEnter={() => setTooltip({ x: cx, y: top, text: label })} onMouseLeave={() => setTooltip(null)}>
       <rect x={cx - barW / 2} y={top} width={barW} height={baseline - top} fill="var(--chart-color)" fillOpacity={0.8} rx={2} />
