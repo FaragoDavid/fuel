@@ -16,10 +16,6 @@ const STORED_YEAR_KEY = 'fuel_distance_year';
 
 type Granularity = 'weekly' | 'monthly';
 
-interface Props {
-  fillups: Fillup[];
-}
-
 interface PeriodTotal {
   key: string;
   total: number;
@@ -158,7 +154,7 @@ function renderTooltip(tooltip: { x: number; y: number; text: string }) {
   );
 }
 
-export default function TravelDistanceChart({ fillups }: Props) {
+export default function TravelDistanceChart({ fillups }: { fillups: Fillup[] }) {
   const [granularity, setGranularity] = useState<Granularity>('monthly');
   const [selectedYear, setSelectedYear] = useState<number | null>(() => {
     const stored = localStorage.getItem(STORED_YEAR_KEY);
