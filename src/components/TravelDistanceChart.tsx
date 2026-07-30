@@ -1,4 +1,4 @@
-import { getISOWeek, getISOWeekYear, startOfISOWeek } from 'date-fns';
+import { format, startOfISOWeek } from 'date-fns';
 import { useMemo, useState } from 'react';
 import type { Fillup } from '../types/fillup';
 import { scaleLinear, niceYTicks, smoothLine } from '../utils/chart';
@@ -35,13 +35,6 @@ interface Bar {
   xLabel: string;
 }
 
-function isoWeekKey(year: number, month: number, day: number): string {
-  const date = new Date(year, month - 1, day);
-  const isoYear = getISOWeekYear(date);
-  const week = getISOWeek(date);
-  return `${isoYear}-W${String(week).padStart(2, '0')}`;
-}
-
 function weekStartLabel(key: string): string {
   const year = parseInt(key.slice(0, 4));
   const week = parseInt(key.slice(6));
@@ -54,7 +47,7 @@ function calculatePeriods(fillups: Fillup[], granularity: Granularity): PeriodTo
   const periods: PeriodTotal[] = [];
   for (const { year, month, day, tripKm } of fillups) {
     if (!tripKm) continue;
-    const key = granularity === 'weekly' ? isoWeekKey(year, month, day) : `${year}-${String(month).padStart(2, '0')}`;
+    const key = format(new Date(year, month - 1, day), granularity === 'weekly' ? "RRRR-'W'II" : 'yyyy-MM');
     const last = periods[periods.length - 1];
     if (last?.key === key) last.total += tripKm;
     else periods.push({ key, total: tripKm });
