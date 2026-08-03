@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import type { Fillup } from '../types/fillup';
 import { deriveEfficiencies } from '../utils/derive-efficiencies';
-import { formatHuf, formatDate, efficiencyColor } from '../utils/format';
+import { formatHuf, formatDate, efficiencyColor, formatNum } from '../utils/format';
 
 const START_ODO = 181691;
 
@@ -78,15 +78,7 @@ export default function FillupTable({ sortedFillups, onEdit, onDelete }: Props) 
                   {l100 ? <span style={{ color: efficiencyColor(l100, l100Min, l100Max) }}>{l100.toFixed(1)}</span> : '—'}
                 </td>
                 <td className="table-cell-dim">
-                  {odo != null ? (
-                    odoIsReal ? (
-                      odo.toLocaleString('hu-HU')
-                    ) : (
-                      <span className="estimated">≈ {odo.toLocaleString('hu-HU')}</span>
-                    )
-                  ) : (
-                    '—'
-                  )}
+                  {odo != null ? odoIsReal ? formatNum(odo) : <span className="estimated">≈ {formatNum(odo)}</span> : '—'}
                 </td>
                 <td className="table-cell-actions">
                   <button onClick={() => onEdit(fillup)} className="btn-icon hover:text-teal-50">

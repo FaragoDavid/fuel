@@ -1,7 +1,11 @@
 export const MONTHS = ['jan.', 'febr.', 'márc.', 'ápr.', 'máj.', 'jún.', 'júl.', 'aug.', 'szept.', 'okt.', 'nov.', 'dec.'];
 
+export function formatNum(n: number): string {
+  return new Intl.NumberFormat('hu-HU', { useGrouping: 'always' as unknown as boolean }).format(n);
+}
+
 export function formatHuf(amount: number): string {
-  return amount.toLocaleString('hu-HU') + ' Ft';
+  return formatNum(amount) + ' Ft';
 }
 
 export function formatDate(year: number, month: number, day: number): string {

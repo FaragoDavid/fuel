@@ -2,7 +2,7 @@ import { format, startOfISOWeek } from 'date-fns';
 import { useMemo, useState } from 'react';
 import type { Fillup } from '../types/fillup';
 import { scaleLinear, niceYTicks, smoothLine } from '../utils/chart';
-import { MONTHS } from '../utils/format';
+import { MONTHS, formatNum } from '../utils/format';
 
 const WIDTH = 600;
 const HEIGHT = 220;
@@ -56,8 +56,8 @@ function buildBars(periods: PeriodTotal[], granularity: Granularity, xStep: numb
     const xLabel = granularity === 'weekly' ? weekStartLabel(key) : MONTHS[parseInt(key.slice(5)) - 1];
     const label =
       granularity === 'weekly'
-        ? `${xLabel}: ${total.toLocaleString('hu-HU')} km`
-        : `${key.slice(0, 4)}. ${MONTHS[parseInt(key.slice(5)) - 1]} ${total.toLocaleString('hu-HU')} km`;
+        ? `${xLabel}: ${formatNum(total)} km`
+        : `${key.slice(0, 4)}. ${MONTHS[parseInt(key.slice(5)) - 1]} ${formatNum(total)} km`;
     return { cx: PAD.left + xStep * index + xStep / 2, barW, total, label, key, xLabel };
   });
 }

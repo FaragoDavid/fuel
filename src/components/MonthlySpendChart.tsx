@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { scaleLinear, niceYTicks } from '../utils/chart';
 import type { Fillup } from '../types/fillup';
-import { MONTHS } from '../utils/format';
+import { MONTHS, formatNum } from '../utils/format';
 
 interface Props {
   fillups: Fillup[];
@@ -41,7 +41,7 @@ export default function MonthlySpendChart({ fillups }: Props) {
         top: yScale(total),
         barW,
         total,
-        label: `${key.slice(0, 4)}. ${MONTHS[parseInt(key.slice(5)) - 1]} ${total.toLocaleString('hu-HU')} Ft`,
+        label: `${key.slice(0, 4)}. ${MONTHS[parseInt(key.slice(5)) - 1]} ${formatNum(total)} Ft`,
         month: key,
       })),
     };
