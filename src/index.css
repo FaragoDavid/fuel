@@ -61,6 +61,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     color: var(--color-text);
+    overflow-x: hidden;
   }
 }
 
@@ -109,6 +110,7 @@
     background-color: var(--color-table-bg);
     border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-sm);
+    overflow-x: auto;
   }
 
   .table-header-cell:first-child {
