@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { useState } from 'react';
 import type { Fillup } from '../types/fillup';
 import { formatNum } from '../utils/format';
@@ -9,7 +10,7 @@ interface Props {
 }
 
 function emptyForm() {
-  return { date: '', totalCost: '', liters: '', tripKm: '', odometer: '' };
+  return { date: format(new Date(), 'yyyy-MM-dd'), totalCost: '', liters: '', tripKm: '', odometer: '' };
 }
 
 function fillupToForm(f: Fillup) {
