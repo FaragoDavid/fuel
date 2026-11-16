@@ -42,13 +42,13 @@ export default function FillupTable({ sortedFillups, onEdit, onDelete }: Props) 
         <thead>
           <tr className="table-header-row">
             <th className="table-header-cell">Dátum</th>
-            <th className="table-header-cell text-right">Összeg</th>
-            <th className="table-header-cell text-right">Liter</th>
-            <th className="table-header-cell text-right max-sm:hidden">Ft/l</th>
-            <th className="table-header-cell text-right max-sm:hidden">Trip km</th>
-            <th className="table-header-cell text-right max-sm:hidden">l/100km</th>
-            <th className="table-header-cell text-right max-sm:hidden">Kmóra</th>
-            <th className="table-header-cell" style={{ borderRadius: '0 var(--radius-2xl) 0 0' }} />
+            <th className="table-header-cell-num">Összeg</th>
+            <th className="table-header-cell-num">Liter</th>
+            <th className="table-header-cell-desktop">Ft/l</th>
+            <th className="table-header-cell-desktop">Trip km</th>
+            <th className="table-header-cell-desktop">l/100km</th>
+            <th className="table-header-cell-desktop">Kmóra</th>
+            <th className="table-header-cell" />
           </tr>
         </thead>
         <tbody>
@@ -65,8 +65,8 @@ export default function FillupTable({ sortedFillups, onEdit, onDelete }: Props) 
                 </td>
                 <td className="table-cell">{fillup.totalCost ? formatHuf(fillup.totalCost) : '—'}</td>
                 <td className="table-cell">{fillup.liters?.toFixed(2) ?? '—'}</td>
-                <td className="table-cell-muted max-sm:hidden">{fpl ? fpl.toFixed(0) : '—'}</td>
-                <td className="table-cell max-sm:hidden">
+                <td className="table-cell-muted-desktop">{fpl ? fpl.toFixed(0) : '—'}</td>
+                <td className="table-cell-desktop">
                   {fillup.tripKm != null ? (
                     fillup.estimated ? (
                       <span className="estimated">≈ {fillup.tripKm.toFixed(0)}</span>
@@ -77,17 +77,17 @@ export default function FillupTable({ sortedFillups, onEdit, onDelete }: Props) 
                     '—'
                   )}
                 </td>
-                <td className="table-cell max-sm:hidden">
+                <td className="table-cell-desktop">
                   {l100 ? <span style={{ color: efficiencyColor(l100, l100Min, l100Max) }}>{l100.toFixed(1)}</span> : '—'}
                 </td>
-                <td className="table-cell-dim max-sm:hidden">
+                <td className="table-cell-dim-desktop">
                   {odo != null ? odoIsReal ? formatNum(odo) : <span className="estimated">≈ {formatNum(odo)}</span> : '—'}
                 </td>
                 <td className="table-cell-actions">
-                  <button onClick={() => onEdit(fillup)} className="btn-icon hover:text-teal-50">
+                  <button onClick={() => onEdit(fillup)} className="btn-icon-edit">
                     <Pencil size={14} />
                   </button>
-                  <button onClick={() => onDelete(fillup.id)} className="btn-icon hover:text-red-300">
+                  <button onClick={() => onDelete(fillup.id)} className="btn-icon-delete">
                     <Trash2 size={14} />
                   </button>
                 </td>

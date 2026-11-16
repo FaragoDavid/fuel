@@ -166,7 +166,7 @@ export default function App() {
       <div className="page-inner">
         <div className="page-header">
           <h1 className="page-title">Tankolások</h1>
-          <button onClick={() => setDialog({ mode: 'add' })} className="btn-primary hidden sm:flex items-center gap-1.5">
+          <button onClick={() => setDialog({ mode: 'add' })} className="btn-header-action">
             <Plus size={16} />
             Új tankolás
           </button>
@@ -214,11 +214,7 @@ export default function App() {
         )}
       </div>
 
-      <button
-        onClick={() => setDialog({ mode: 'add' })}
-        className="sm:hidden fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full btn-primary flex items-center justify-center shadow-lg"
-        aria-label="Új tankolás"
-      >
+      <button onClick={() => setDialog({ mode: 'add' })} className="btn-fab" aria-label="Új tankolás">
         <Plus size={24} />
       </button>
 

@@ -37,7 +37,7 @@ export default function StatsStrip({ sortedFillups }: Props) {
   }, [sortedFillups]);
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 mb-6">
+    <div className="stats-grid">
       <Stat label="Átlag l/100km" value={stats.avgL100 ? formatNum(stats.avgL100, 1) : '—'} />
       <Stat label="Átlag Ft/100km" value={stats.avgFtPer100km ? formatHuf(Math.round(stats.avgFtPer100km)) : '—'} />
       <CyclingRateStat totalLiters={stats.totalLiters} totalKm={stats.totalKm} spanDays={stats.spanDays} />
