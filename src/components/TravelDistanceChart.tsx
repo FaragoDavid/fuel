@@ -2,7 +2,7 @@ import { format, startOfISOWeek } from 'date-fns';
 import { useMemo, useState } from 'react';
 import type { Fillup } from '../types/fillup';
 import type { Period } from '../types/ui';
-import { scaleLinear, niceYTicks, smoothLine } from '../utils/chart';
+import { niceYTicks, scaleLinear, smoothLine } from '../utils/chart';
 import { MONTHS, formatNum } from '../utils/format';
 import { LocalStorage } from '../utils/local-storage';
 

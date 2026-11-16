@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import type { Fillup } from '../types/fillup';
 import { deriveEfficiencies } from '../utils/derive-efficiencies';
-import { formatHuf, formatDate, efficiencyColor, formatNum } from '../utils/format';
+import { formatHuf, formatDate, formatDateShort, efficiencyColor, formatNum } from '../utils/format';
 
 const START_ODO = 181691;
 
@@ -44,10 +44,10 @@ export default function FillupTable({ sortedFillups, onEdit, onDelete }: Props) 
             <th className="table-header-cell">Dátum</th>
             <th className="table-header-cell text-right">Összeg</th>
             <th className="table-header-cell text-right">Liter</th>
-            <th className="table-header-cell text-right">Ft/l</th>
-            <th className="table-header-cell text-right">Trip km</th>
-            <th className="table-header-cell text-right">l/100km</th>
-            <th className="table-header-cell text-right">Kmóra</th>
+            <th className="table-header-cell text-right max-sm:hidden">Ft/l</th>
+            <th className="table-header-cell text-right max-sm:hidden">Trip km</th>
+            <th className="table-header-cell text-right max-sm:hidden">l/100km</th>
+            <th className="table-header-cell text-right max-sm:hidden">Kmóra</th>
             <th className="table-header-cell" style={{ borderRadius: '0 var(--radius-2xl) 0 0' }} />
           </tr>
         </thead>
@@ -59,11 +59,14 @@ export default function FillupTable({ sortedFillups, onEdit, onDelete }: Props) 
             const odoIsReal = fillup.odometer != null;
             return (
               <tr key={fillup.id} data-id={fillup.id} className="table-row">
-                <td className="table-cell-date">{formatDate(fillup.year, fillup.month, fillup.day)}</td>
+                <td className="table-cell-date">
+                  <span className="sm:hidden">{formatDateShort(fillup.month, fillup.day)}</span>
+                  <span className="hidden sm:inline">{formatDate(fillup.year, fillup.month, fillup.day)}</span>
+                </td>
                 <td className="table-cell">{fillup.totalCost ? formatHuf(fillup.totalCost) : '—'}</td>
                 <td className="table-cell">{fillup.liters?.toFixed(2) ?? '—'}</td>
-                <td className="table-cell-muted">{fpl ? fpl.toFixed(0) : '—'}</td>
-                <td className="table-cell">
+                <td className="table-cell-muted max-sm:hidden">{fpl ? fpl.toFixed(0) : '—'}</td>
+                <td className="table-cell max-sm:hidden">
                   {fillup.tripKm != null ? (
                     fillup.estimated ? (
                       <span className="estimated">≈ {fillup.tripKm.toFixed(0)}</span>
@@ -74,10 +77,10 @@ export default function FillupTable({ sortedFillups, onEdit, onDelete }: Props) 
                     '—'
                   )}
                 </td>
-                <td className="table-cell">
+                <td className="table-cell max-sm:hidden">
                   {l100 ? <span style={{ color: efficiencyColor(l100, l100Min, l100Max) }}>{l100.toFixed(1)}</span> : '—'}
                 </td>
-                <td className="table-cell-dim">
+                <td className="table-cell-dim max-sm:hidden">
                   {odo != null ? odoIsReal ? formatNum(odo) : <span className="estimated">≈ {formatNum(odo)}</span> : '—'}
                 </td>
                 <td className="table-cell-actions">

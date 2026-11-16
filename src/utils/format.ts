@@ -16,6 +16,10 @@ export function formatDate(year: number, month: number, day: number): string {
   return `${year}. ${MONTHS[month - 1]} ${day}.`;
 }
 
+export function formatDateShort(month: number, day: number): string {
+  return `${MONTHS[month - 1]} ${day}.`;
+}
+
 export function efficiencyColor(value: number, min: number, max: number): string {
   if (min === max) return 'hsl(120, 60%, 65%)';
   const normalized = (value - min) / (max - min);
