@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Fillup } from '../types/fillup';
 import { formatNum } from '../utils/format';
 
@@ -48,6 +48,14 @@ export default function FillupDialog({ initial, onSave, onCancel }: Props) {
     set(key, value.replace(/\s/g, ''));
   }
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onCancel();
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [onCancel]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.date) return;
@@ -68,8 +76,8 @@ export default function FillupDialog({ initial, onSave, onCancel }: Props) {
   };
 
   return (
-    <div className="overlay">
-      <div className="modal max-w-sm p-6">
+    <div className="overlay" onClick={onCancel}>
+      <div className="modal max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
         <h2 className="modal-title">{initial ? 'Tankolás szerkesztése' : 'Új tankolás'}</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <Field label="Dátum" type="date" value={form.date} onChange={(v) => set('date', v)} required />
