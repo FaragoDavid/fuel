@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Fillup } from '../types/fillup';
+import { formatNum } from '../utils/format';
 
 interface Props {
   initial?: Fillup;
@@ -16,11 +17,15 @@ function fillupToForm(f: Fillup) {
   const day = String(f.day).padStart(2, '0');
   return {
     date: `${f.year}-${month}-${day}`,
-    totalCost: f.totalCost?.toString() ?? '',
-    liters: f.liters?.toString() ?? '',
-    tripKm: f.tripKm?.toString() ?? '',
-    odometer: f.odometer?.toString() ?? '',
+    totalCost: f.totalCost != null ? formatNum(f.totalCost) : '',
+    liters: f.liters?.toString().replace('.', ',') ?? '',
+    tripKm: f.tripKm?.toString().replace('.', ',') ?? '',
+    odometer: f.odometer != null ? formatNum(f.odometer) : '',
   };
+}
+
+function parseHu(s: string): number {
+  return parseFloat(s.replace(/\s/g, '').replace(',', '.'));
 }
 
 export default function FillupDialog({ initial, onSave, onCancel }: Props) {
@@ -28,16 +33,30 @@ export default function FillupDialog({ initial, onSave, onCancel }: Props) {
 
   const set = (key: string, value: string) => setForm((prev) => ({ ...prev, [key]: value }));
 
+  function blurInt(key: string, value: string) {
+    const n = parseHu(value);
+    if (!isNaN(n) && value !== '') set(key, formatNum(Math.round(n)));
+  }
+
+  function blurDecimal(key: string, value: string) {
+    const n = parseHu(value);
+    if (!isNaN(n) && value !== '') set(key, formatNum(n, 0, 10));
+  }
+
+  function focusNum(key: string, value: string) {
+    set(key, value.replace(/\s/g, ''));
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.date) return;
 
     const [year, month, day] = form.date.split('-').map(Number);
     const f: Fillup = { id: initial?.id ?? '', year, month, day };
-    const cost = parseFloat(form.totalCost);
-    const liters = parseFloat(form.liters);
-    const tripKm = parseFloat(form.tripKm);
-    const odometer = parseFloat(form.odometer);
+    const cost = parseHu(form.totalCost);
+    const liters = parseHu(form.liters);
+    const tripKm = parseHu(form.tripKm);
+    const odometer = parseHu(form.odometer);
 
     if (!isNaN(cost)) f.totalCost = cost;
     if (!isNaN(liters)) f.liters = liters;
@@ -53,10 +72,42 @@ export default function FillupDialog({ initial, onSave, onCancel }: Props) {
         <h2 className="modal-title">{initial ? 'Tankolás szerkesztése' : 'Új tankolás'}</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <Field label="Dátum" type="date" value={form.date} onChange={(v) => set('date', v)} required />
-          <Field label="Összeg (Ft)" type="number" value={form.totalCost} onChange={(v) => set('totalCost', v)} min="1" step="1" />
-          <Field label="Liter" type="number" value={form.liters} onChange={(v) => set('liters', v)} step="0.01" min="0.01" />
-          <Field label="Trip km" type="number" value={form.tripKm} onChange={(v) => set('tripKm', v)} step="0.1" min="0.1" />
-          <Field label="Kmóraállás" type="number" value={form.odometer} onChange={(v) => set('odometer', v)} min="1" step="1" />
+          <Field
+            label="Összeg (Ft)"
+            type="text"
+            inputMode="numeric"
+            value={form.totalCost}
+            onChange={(v) => set('totalCost', v)}
+            onFocus={() => focusNum('totalCost', form.totalCost)}
+            onBlur={(v) => blurInt('totalCost', v)}
+          />
+          <Field
+            label="Liter"
+            type="text"
+            inputMode="decimal"
+            value={form.liters}
+            onChange={(v) => set('liters', v)}
+            onFocus={() => focusNum('liters', form.liters)}
+            onBlur={(v) => blurDecimal('liters', v)}
+          />
+          <Field
+            label="Trip km"
+            type="text"
+            inputMode="decimal"
+            value={form.tripKm}
+            onChange={(v) => set('tripKm', v)}
+            onFocus={() => focusNum('tripKm', form.tripKm)}
+            onBlur={(v) => blurDecimal('tripKm', v)}
+          />
+          <Field
+            label="Kmóraállás"
+            type="text"
+            inputMode="numeric"
+            value={form.odometer}
+            onChange={(v) => set('odometer', v)}
+            onFocus={() => focusNum('odometer', form.odometer)}
+            onBlur={(v) => blurInt('odometer', v)}
+          />
           <div className="flex gap-2 justify-end mt-2">
             <button type="button" onClick={onCancel} className="btn-secondary">
               Mégse
@@ -74,18 +125,27 @@ export default function FillupDialog({ initial, onSave, onCancel }: Props) {
 interface FieldProps {
   label: string;
   type: string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
   value: string;
   onChange: (v: string) => void;
+  onFocus?: () => void;
+  onBlur?: (v: string) => void;
   required?: boolean;
-  step?: string;
-  min?: string;
 }
 
-function Field({ label, type, value, onChange, ...rest }: FieldProps) {
+function Field({ label, type, value, onChange, onFocus, onBlur, ...rest }: FieldProps) {
   return (
     <div className="form-field">
       <label className="form-label">{label}</label>
-      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} className="form-input" {...rest} />
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={onFocus}
+        onBlur={onBlur ? (e) => onBlur(e.target.value) : undefined}
+        className="form-input"
+        {...rest}
+      />
     </div>
   );
 }
