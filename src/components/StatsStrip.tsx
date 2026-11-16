@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
+import { differenceInDays } from 'date-fns';
 import type { Fillup } from '../types/fillup';
-import { formatHuf } from '../utils/format';
 import { deriveEfficiencies } from '../utils/derive-efficiencies';
+import { formatNum, formatHuf } from '../utils/format';
+import CyclingRateStat from './CyclingRateStat';
 
 interface Props {
   sortedFillups: Fillup[];
@@ -11,24 +13,34 @@ export default function StatsStrip({ sortedFillups }: Props) {
   const stats = useMemo(() => {
     const efficiencies = [...deriveEfficiencies(sortedFillups).values()];
 
-    const pricesPerLiter = sortedFillups
-      .filter(({ totalCost, liters }) => totalCost && liters)
-      .map(({ totalCost, liters }) => totalCost! / liters!);
+    const costsPerHundredKm = sortedFillups
+      .filter(({ totalCost, tripKm, estimated }) => totalCost && tripKm && !estimated)
+      .map(({ totalCost, tripKm }) => (totalCost! / tripKm!) * 100);
+
+    const totalLiters = sortedFillups.filter(({ liters }) => liters).reduce((sum, f) => sum + f.liters!, 0);
+    const totalKm = sortedFillups.filter(({ tripKm }) => tripKm).reduce((sum, f) => sum + f.tripKm!, 0);
+
+    let spanDays = 0;
+    if (sortedFillups.length >= 2) {
+      const first = sortedFillups[0];
+      const last = sortedFillups[sortedFillups.length - 1];
+      spanDays = differenceInDays(new Date(last.year, last.month - 1, last.day), new Date(first.year, first.month - 1, first.day));
+    }
 
     return {
-      totalSpend: sortedFillups.filter(({ totalCost }) => totalCost).reduce((sum, fillup) => sum + fillup.totalCost!, 0),
       avgL100: efficiencies.length ? efficiencies.reduce((sum, val) => sum + val, 0) / efficiencies.length : null,
-      avgPricePerLiter: pricesPerLiter.length ? pricesPerLiter.reduce((sum, price) => sum + price, 0) / pricesPerLiter.length : null,
-      fillupCount: sortedFillups.length,
+      avgFtPer100km: costsPerHundredKm.length ? costsPerHundredKm.reduce((sum, v) => sum + v, 0) / costsPerHundredKm.length : null,
+      totalLiters,
+      totalKm,
+      spanDays,
     };
   }, [sortedFillups]);
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-6">
-      <Stat label="Tankolások" value={String(stats.fillupCount)} />
-      <Stat label="Összes költség" value={formatHuf(stats.totalSpend)} />
-      <Stat label="Átlag l/100km" value={stats.avgL100 ? stats.avgL100.toFixed(1) : '—'} />
-      <Stat label="Átlag Ft/l" value={stats.avgPricePerLiter ? stats.avgPricePerLiter.toFixed(0) + ' Ft' : '—'} />
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 mb-6">
+      <Stat label="Átlag l/100km" value={stats.avgL100 ? formatNum(stats.avgL100, 1) : '—'} />
+      <Stat label="Átlag Ft/100km" value={stats.avgFtPer100km ? formatHuf(Math.round(stats.avgFtPer100km)) : '—'} />
+      <CyclingRateStat totalLiters={stats.totalLiters} totalKm={stats.totalKm} spanDays={stats.spanDays} />
     </div>
   );
 }
