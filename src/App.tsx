@@ -11,12 +11,14 @@ import TravelDistanceChart from './components/TravelDistanceChart';
 import { useStore } from './data/store';
 import { useAuth } from './services/auth';
 import type { Fillup } from './types/fillup';
+import type { ChartView } from './types/ui';
 import { formatDate } from './utils/format';
+import { LocalStorage } from './utils/local-storage';
 import { compareFillups } from './utils/sort';
 
 type DialogState = { mode: 'add' } | { mode: 'edit'; fillup: Fillup } | null;
 
-const CHART_VIEWS = [
+const CHART_OPTIONS = [
   { key: 'l100', label: 'Fogyasztás', yUnit: 'l/100km', yDecimals: 1 },
   { key: 'ftl', label: 'Üzemanyagár', yUnit: 'Ft/l', yDecimals: 0 },
   { key: 'ftkm', label: 'Kilométerköltség', yUnit: 'Ft/km', yDecimals: 0 },
@@ -24,8 +26,6 @@ const CHART_VIEWS = [
   { key: 'distance', label: 'Megtett km', yUnit: '', yDecimals: 0 },
 ] as const;
 
-type ChartView = (typeof CHART_VIEWS)[number]['key'];
-const STORED_CHART_KEY = 'fuel_chart';
 const CHART_COLOR = 'var(--chart-color)';
 
 function toTimestamp({ year, month, day }: Fillup): number {
@@ -97,12 +97,12 @@ export default function App() {
 
   const [dialog, setDialog] = useState<DialogState>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [chartView, setChartView] = useState<ChartView>(() => (localStorage.getItem(STORED_CHART_KEY) as ChartView) ?? 'l100');
-  const activeView = CHART_VIEWS.find((v) => v.key === chartView)!;
+  const [chartView, setChartView] = useState<ChartView>(() => LocalStorage.getChartView() ?? 'l100');
+  const activeView = CHART_OPTIONS.find((v) => v.key === chartView)!;
 
   function handleChartView(view: ChartView) {
     setChartView(view);
-    localStorage.setItem(STORED_CHART_KEY, view);
+    LocalStorage.setChartView(view);
   }
 
   useEffect(() => {
@@ -181,7 +181,7 @@ export default function App() {
             <StatsStrip sortedFillups={sortedFillups} />
             <div className="card mb-6">
               <div className="chart-tabs">
-                {CHART_VIEWS.map((chartOption) => (
+                {CHART_OPTIONS.map((chartOption) => (
                   <button
                     key={chartOption.key}
                     onClick={() => handleChartView(chartOption.key)}
