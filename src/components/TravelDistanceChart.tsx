@@ -1,8 +1,10 @@
 import { format, startOfISOWeek } from 'date-fns';
 import { useMemo, useState } from 'react';
 import type { Fillup } from '../types/fillup';
+import type { Period } from '../types/ui';
 import { scaleLinear, niceYTicks, smoothLine } from '../utils/chart';
 import { MONTHS, formatNum } from '../utils/format';
+import { LocalStorage } from '../utils/local-storage';
 
 const WIDTH = 600;
 const HEIGHT = 220;
@@ -12,9 +14,6 @@ const INNER_H = HEIGHT - PAD.top - PAD.bottom;
 const TOOLTIP_W = 140;
 const TOOLTIP_GAP = 12;
 const BAR_GAP = 4;
-const STORED_YEAR_KEY = 'fuel_distance_year';
-
-type Granularity = 'weekly' | 'monthly';
 
 interface PeriodTotal {
   key: string;
@@ -39,11 +38,12 @@ function weekStartLabel(key: string): string {
   return `${MONTHS[monday.getMonth()]} ${monday.getDate()}.`;
 }
 
-function calculatePeriods(fillups: Fillup[], granularity: Granularity): PeriodTotal[] {
+function calculatePeriods(fillups: Fillup[], granularity: Period): PeriodTotal[] {
   const periods: PeriodTotal[] = [];
   for (const { year, month, day, tripKm } of fillups) {
     if (!tripKm) continue;
-    const key = format(new Date(year, month - 1, day), granularity === 'weekly' ? "RRRR-'W'II" : 'yyyy-MM');
+    const fmt = granularity === 'hét' ? "RRRR-'W'II" : granularity === 'hó' ? 'yyyy-MM' : 'yyyy';
+    const key = format(new Date(year, month - 1, day), fmt);
     const last = periods[periods.length - 1];
     if (last?.key === key) last.total += tripKm;
     else periods.push({ key, total: tripKm });
@@ -51,13 +51,20 @@ function calculatePeriods(fillups: Fillup[], granularity: Granularity): PeriodTo
   return periods;
 }
 
-function buildBars(periods: PeriodTotal[], granularity: Granularity, xStep: number, barW: number): Omit<Bar, 'top'>[] {
+function buildBars(periods: PeriodTotal[], granularity: Period, xStep: number, barW: number): Omit<Bar, 'top'>[] {
   return periods.map(({ key, total }, index) => {
-    const xLabel = granularity === 'weekly' ? weekStartLabel(key) : MONTHS[parseInt(key.slice(5)) - 1];
-    const label =
-      granularity === 'weekly'
-        ? `${xLabel}: ${formatNum(total)} km`
-        : `${key.slice(0, 4)}. ${MONTHS[parseInt(key.slice(5)) - 1]} ${formatNum(total)} km`;
+    let xLabel: string;
+    let label: string;
+    if (granularity === 'hét') {
+      xLabel = weekStartLabel(key);
+      label = `${xLabel}: ${formatNum(total)} km`;
+    } else if (granularity === 'hó') {
+      xLabel = MONTHS[parseInt(key.slice(5)) - 1];
+      label = `${key.slice(0, 4)}. ${xLabel} ${formatNum(total)} km`;
+    } else {
+      xLabel = key;
+      label = `${key}. ${formatNum(total)} km`;
+    }
     return { cx: PAD.left + xStep * index + xStep / 2, barW, total, label, key, xLabel };
   });
 }
@@ -155,17 +162,14 @@ function renderTooltip(tooltip: { x: number; y: number; text: string }) {
 }
 
 export default function TravelDistanceChart({ fillups }: { fillups: Fillup[] }) {
-  const [granularity, setGranularity] = useState<Granularity>('monthly');
-  const [selectedYear, setSelectedYear] = useState<number | null>(() => {
-    const stored = localStorage.getItem(STORED_YEAR_KEY);
-    return stored ? parseInt(stored) : null;
-  });
+  const [granularity, setGranularity] = useState<Period>('hó');
+  const [selectedYear, setSelectedYear] = useState<number | null>(() => LocalStorage.getDistanceYear());
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
 
   function handleYearChange(year: number | null) {
     setSelectedYear(year);
-    if (year === null) localStorage.removeItem(STORED_YEAR_KEY);
-    else localStorage.setItem(STORED_YEAR_KEY, String(year));
+    if (year === null) LocalStorage.removeDistanceYear();
+    else LocalStorage.setDistanceYear(year);
   }
 
   const availableYears = useMemo(() => [...new Set(fillups.map(({ year }) => year))].sort((a, b) => a - b), [fillups]);
@@ -182,7 +186,7 @@ export default function TravelDistanceChart({ fillups }: { fillups: Fillup[] }) 
     const barW = Math.max(BAR_GAP, xStep - BAR_GAP);
     const maxTotal = Math.max(...periods.map(({ total }) => total));
     const yScale = scaleLinear(0, maxTotal * 1.1, PAD.top + INNER_H, PAD.top);
-    const recentN = granularity === 'weekly' ? 12 : 3;
+    const recentN = granularity === 'hét' ? 12 : 3;
 
     const bars: Bar[] = buildBars(periods, granularity, xStep, barW).map((bar) => ({ ...bar, top: yScale(bar.total) }));
     const rollingAveragePath = smoothLine(
@@ -203,29 +207,34 @@ export default function TravelDistanceChart({ fillups }: { fillups: Fillup[] }) 
   return (
     <div>
       <div className="chart-tabs" style={{ marginBottom: 8 }}>
-        <button onClick={() => setGranularity('monthly')} className={granularity === 'monthly' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => setGranularity('hó')} className={granularity === 'hó' ? 'tab-btn-active' : 'tab-btn'}>
           Havi
         </button>
-        <button onClick={() => setGranularity('weekly')} className={granularity === 'weekly' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => setGranularity('hét')} className={granularity === 'hét' ? 'tab-btn-active' : 'tab-btn'}>
           Heti
         </button>
-        <select
-          value={selectedYear ?? ''}
-          onChange={(e) => handleYearChange(e.target.value === '' ? null : parseInt(e.target.value))}
-          className="tab-btn"
-          style={{ marginLeft: 'auto', backgroundColor: 'transparent' }}
-        >
-          <option value="">Összes év</option>
-          {availableYears.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
+        <button onClick={() => setGranularity('év')} className={granularity === 'év' ? 'tab-btn-active' : 'tab-btn'}>
+          Éves
+        </button>
+        {granularity !== 'év' && (
+          <select
+            value={selectedYear ?? ''}
+            onChange={(e) => handleYearChange(e.target.value === '' ? null : parseInt(e.target.value))}
+            className="tab-btn"
+            style={{ marginLeft: 'auto', backgroundColor: 'transparent' }}
+          >
+            <option value="">Összes év</option>
+            {availableYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="w-full h-auto" onMouseLeave={() => setTooltip(null)}>
         {renderGridLines(gridLines, baseline)}
-        {selectedYear === null && renderYearLines(yearLines, baseline)}
+        {selectedYear === null && granularity !== 'év' && renderYearLines(yearLines, baseline)}
         {renderBars(bars, baseline, setTooltip)}
         {renderOverallAverage(overallAvgY)}
         <path d={rollingAveragePath} fill="none" stroke="var(--chart-avg)" strokeWidth={2} strokeLinejoin="round" opacity={0.9} />
