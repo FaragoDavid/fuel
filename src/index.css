@@ -23,27 +23,20 @@
     --color-page-bg: var(--teal-950);
     --color-card-bg: var(--cream);
     --color-header-bg: var(--teal-800);
-    --color-header-text: var(--cream);
     --color-stat-bg: var(--teal-800);
-    --color-stat-text: var(--cream);
-    --color-stat-label: var(--cream);
     --color-chart-bg: var(--teal-800);
     --color-table-header-bg: var(--teal-600);
-    --color-table-header-text: var(--cream);
     --color-table-bg: var(--teal-900);
     --color-table-row-even: var(--teal-900);
     --color-table-row-odd: var(--teal-800);
-    --color-table-text: var(--cream);
 
     /* Modal */
     --color-modal-bg: var(--amber-800);
-    --color-modal-text: var(--cream);
     --color-modal-label: var(--amber-500);
     --color-input-bg: var(--amber-900);
-    --color-input-text: var(--cream);
 
     /* Text */
-    --color-text-on-dark: var(--cream);
+    --color-text: var(--cream);
     --color-text-muted: var(--amber-500);
 
     /* Borders */
@@ -102,7 +95,7 @@
   .page-title {
     font-size: var(--text-2xl);
     font-weight: 700;
-    color: var(--color-header-text);
+    color: var(--color-text);
   }
 
   /* Cards */
@@ -169,14 +162,14 @@
 
   .stat-label {
     font-size: var(--text-xs);
-    color: var(--color-stat-label);
+    color: var(--color-text);
     margin-bottom: calc(var(--spacing) * 1);
   }
 
   .stat-value {
     font-size: var(--text-lg);
     font-weight: 600;
-    color: var(--color-stat-text);
+    color: var(--color-text);
   }
 
   /* Overlay + modal */
@@ -201,12 +194,12 @@
   .modal-title {
     font-size: var(--text-lg);
     font-weight: 600;
-    color: var(--color-modal-text);
+    color: var(--color-text);
     margin-bottom: calc(var(--spacing) * 4);
   }
 
   .confirm-text {
-    color: var(--color-modal-text);
+    color: var(--color-text);
     margin-bottom: calc(var(--spacing) * 4);
   }
 
@@ -216,7 +209,7 @@
     border-radius: var(--radius-lg);
     font-size: var(--text-sm);
     background-color: var(--color-interactive);
-    color: var(--color-text-on-dark);
+    color: var(--color-text);
   }
 
   .btn-primary:hover {
@@ -239,7 +232,7 @@
     border-radius: var(--radius-lg);
     font-size: var(--text-sm);
     background-color: var(--color-red-500);
-    color: var(--color-text-on-dark);
+    color: var(--color-text);
   }
 
   .btn-danger:hover {
@@ -249,7 +242,7 @@
   .btn-icon {
     padding: calc(var(--spacing) * 1);
     border-radius: var(--radius-sm);
-    color: var(--color-text-on-dark);
+    color: var(--color-text);
   }
 
   .btn-icon:hover {
@@ -262,7 +255,7 @@
     border-radius: var(--radius-lg);
     font-size: var(--text-sm);
     background-color: var(--color-interactive);
-    color: var(--color-text-on-dark);
+    color: var(--color-text);
   }
 
   .btn-header-action:hover {
@@ -291,7 +284,7 @@
     justify-content: center;
     box-shadow: var(--shadow-lg);
     background-color: var(--color-interactive);
-    color: var(--color-text-on-dark);
+    color: var(--color-text);
   }
 
   .btn-fab:hover {
@@ -318,7 +311,7 @@
     padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 3);
     border-radius: var(--radius-lg);
     font-size: var(--text-sm);
-    color: var(--color-text-on-dark);
+    color: var(--color-text);
     transition: background-color 150ms;
   }
 
@@ -338,11 +331,11 @@
   .year-select-content {
     background-color: var(--color-table-bg);
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklch, var(--color-text-on-dark) 20%, transparent);
+    border: 1px solid color-mix(in oklch, var(--color-text) 20%, transparent);
     padding: calc(var(--spacing) * 1);
     min-width: var(--radix-select-trigger-width);
     z-index: 50;
-    color: var(--color-text-on-dark);
+    color: var(--color-text);
     font-size: var(--text-sm);
   }
 
@@ -362,7 +355,7 @@
     border-radius: var(--radius-lg);
     font-size: var(--text-sm);
     background-color: var(--color-primary);
-    color: var(--color-text-on-dark);
+    color: var(--color-text);
   }
 
   .chart-body {
@@ -392,7 +385,7 @@
     font-size: var(--text-sm);
     width: 100%;
     background-color: var(--color-input-bg);
-    color: var(--color-input-text);
+    color: var(--color-text);
   }
 
   .form-input:focus {
@@ -412,14 +405,14 @@
 
   .loading-text {
     font-size: var(--text-sm);
-    color: var(--color-text-on-dark);
+    color: var(--color-text);
     padding: calc(var(--spacing) * 4) 0;
   }
 
   .saving-text {
     margin-top: calc(var(--spacing) * 3);
     font-size: var(--text-xs);
-    color: var(--color-text-on-dark);
+    color: var(--color-text);
   }
 
   /* Estimated / derived values */
@@ -442,7 +435,7 @@
   .table-header-row {
     text-align: left;
     font-size: var(--text-xs);
-    color: var(--color-table-header-text);
+    color: var(--color-text);
     background-color: var(--color-table-header-bg);
   }
 
@@ -478,19 +471,19 @@
   .table-cell {
     padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
     text-align: right;
-    color: var(--color-table-text);
+    color: var(--color-text);
   }
 
   .table-cell-date {
     padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
-    color: var(--color-table-text);
+    color: var(--color-text);
     white-space: nowrap;
   }
 
   .table-cell-desktop {
     padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
     text-align: right;
-    color: var(--color-table-text);
+    color: var(--color-text);
   }
 
   @media (max-width: 639px) {
