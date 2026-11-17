@@ -1,29 +1,13 @@
 import { useMemo, useState } from 'react';
 
-import type { Fillup, Period, PeriodTotal } from '../types';
+import type { Bar, Fillup, Period, PeriodTotal } from '../types';
 import { niceYTicks, scaleLinear, smoothLine } from '../utils/chart';
+import { BAR_CHART } from '../utils/consts';
 import { MONTHS, formatNum } from '../utils/format';
 import { LocalStorage } from '../utils/local-storage';
 import { calculatePeriods, weekStartLabel } from '../utils/period';
 
-const WIDTH = 600;
-const HEIGHT = 220;
-const PAD = { top: 16, right: 16, bottom: 36, left: 52 };
-const INNER_W = WIDTH - PAD.left - PAD.right;
-const INNER_H = HEIGHT - PAD.top - PAD.bottom;
-const TOOLTIP_W = 140;
-const TOOLTIP_GAP = 12;
-const BAR_GAP = 4;
-
-interface Bar {
-  key: string;
-  cx: number;
-  top: number;
-  barW: number;
-  total: number;
-  label: string;
-  xLabel: string;
-}
+const { WIDTH, HEIGHT, PAD, INNER_W, INNER_H, TOOLTIP_W, TOOLTIP_GAP, BAR_GAP } = BAR_CHART;
 
 function buildBars(periods: PeriodTotal[], period: Period, xStep: number, barW: number): Omit<Bar, 'top'>[] {
   return periods.map(({ key, total }, index) => {

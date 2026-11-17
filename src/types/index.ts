@@ -18,3 +18,13 @@ export interface PeriodTotal {
   key: string;
   total: number;
 }
+
+export interface Bar {
+  key: string;
+  cx: number;
+  top: number;
+  barW: number;
+  total: number;
+  label: string;
+  xLabel: string;
+}
