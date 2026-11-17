@@ -1,37 +1,18 @@
 import { Plus } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
+import ChartPanel from './components/ChartPanel';
 import ConfirmDialog from './components/ConfirmDialog';
 import FillupDialog from './components/FillupDialog';
 import FillupTable from './components/FillupTable';
 import Login from './components/Login';
-import MonthlySpendChart from './components/MonthlySpendChart';
-import ScatterChart from './components/ScatterChart';
 import StatsStrip from './components/StatsStrip';
-import TravelDistanceChart from './components/TravelDistanceChart';
 import { useStore } from './data/store';
 import { useAuth } from './services/auth';
 import type { Fillup } from './types/fillup';
-import type { ChartView } from './types/ui';
-import { formatDate } from './utils/format';
-import { LocalStorage } from './utils/local-storage';
 import { compareFillups } from './utils/sort';
 
 type DialogState = { mode: 'add' } | { mode: 'edit'; fillup: Fillup } | null;
-
-const CHART_OPTIONS = [
-  { key: 'l100', label: 'Fogyasztás', yUnit: 'l/100km', yDecimals: 1 },
-  { key: 'ftl', label: 'Üzemanyagár', yUnit: 'Ft/l', yDecimals: 0 },
-  { key: 'ftkm', label: 'Kilométerköltség', yUnit: 'Ft/km', yDecimals: 0 },
-  { key: 'monthly', label: 'Havi költség', yUnit: '', yDecimals: 0 },
-  { key: 'distance', label: 'Megtett km', yUnit: '', yDecimals: 0 },
-] as const;
-
-const CHART_COLOR = 'var(--chart-color)';
-
-function toTimestamp({ year, month, day }: Fillup): number {
-  return new Date(year, month - 1, day).getTime();
-}
 
 export default function App() {
   const store = useStore();
@@ -41,70 +22,8 @@ export default function App() {
   const [saving, setSaving] = useState(false);
   const sortedFillups = useMemo(() => (fillups ? [...fillups].sort(compareFillups) : []), [fillups]);
 
-  const l100Points = useMemo(() => {
-    const points = [];
-    for (let index = 1; index < sortedFillups.length; index++) {
-      const prev = sortedFillups[index - 1];
-      const curr = sortedFillups[index];
-      if (!prev.liters || !curr.tripKm || curr.estimated || prev.estimated) continue;
-      const l100 = (prev.liters / curr.tripKm) * 100;
-      points.push({
-        id: curr.id,
-        timestamp: toTimestamp(curr),
-        dateLine: formatDate(curr.year, curr.month, curr.day),
-        value: l100,
-        label: `${l100.toFixed(1)} l/100km`,
-      });
-    }
-    return points;
-  }, [sortedFillups]);
-
-  const ftlPoints = useMemo(
-    () =>
-      sortedFillups
-        .filter((fillup) => fillup.totalCost && fillup.liters)
-        .map((fillup) => {
-          const pricePerLiter = fillup.totalCost! / fillup.liters!;
-          return {
-            id: fillup.id,
-            timestamp: toTimestamp(fillup),
-            dateLine: formatDate(fillup.year, fillup.month, fillup.day),
-            value: pricePerLiter,
-            label: `${pricePerLiter.toFixed(0)} Ft/l`,
-          };
-        }),
-    [sortedFillups],
-  );
-
-  const ftkmPoints = useMemo(() => {
-    const points = [];
-    for (let index = 1; index < sortedFillups.length; index++) {
-      const prev = sortedFillups[index - 1];
-      const curr = sortedFillups[index];
-      if (!prev.totalCost || !curr.tripKm) continue;
-      const costPerKm = prev.totalCost / curr.tripKm;
-      points.push({
-        id: curr.id,
-        timestamp: toTimestamp(curr),
-        dateLine: formatDate(curr.year, curr.month, curr.day),
-        value: costPerKm,
-        label: `${costPerKm.toFixed(0)} Ft/km`,
-      });
-    }
-    return points;
-  }, [sortedFillups]);
-
-  const scatterPoints = useMemo(() => ({ l100: l100Points, ftl: ftlPoints, ftkm: ftkmPoints }), [l100Points, ftlPoints, ftkmPoints]);
-
   const [dialog, setDialog] = useState<DialogState>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [chartView, setChartView] = useState<ChartView>(() => LocalStorage.getChartView() ?? 'l100');
-  const activeView = CHART_OPTIONS.find((v) => v.key === chartView)!;
-
-  function handleChartView(view: ChartView) {
-    setChartView(view);
-    LocalStorage.setChartView(view);
-  }
 
   useEffect(() => {
     if (!user) return;
@@ -180,35 +99,7 @@ export default function App() {
         ) : (
           <>
             <StatsStrip sortedFillups={sortedFillups} />
-            <div className="card mb-6">
-              <div className="chart-tabs">
-                {CHART_OPTIONS.map((chartOption) => (
-                  <button
-                    key={chartOption.key}
-                    onClick={() => handleChartView(chartOption.key)}
-                    className={chartView === chartOption.key ? 'tab-btn-active' : 'tab-btn'}
-                  >
-                    {chartOption.label}
-                  </button>
-                ))}
-              </div>
-              <div className="chart-body">
-                {chartView === 'monthly' ? (
-                  <MonthlySpendChart fillups={sortedFillups} />
-                ) : chartView === 'distance' ? (
-                  <TravelDistanceChart fillups={sortedFillups} />
-                ) : (
-                  <ScatterChart
-                    points={scatterPoints[chartView]}
-                    yUnit={activeView.yUnit}
-                    yDecimals={activeView.yDecimals}
-                    color={CHART_COLOR}
-                    trendWindow={10}
-                    onPointClick={scrollToId}
-                  />
-                )}
-              </div>
-            </div>
+            <ChartPanel sortedFillups={sortedFillups} onPointClick={scrollToId} />
             <FillupTable sortedFillups={sortedFillups} onEdit={(fillup) => setDialog({ mode: 'edit', fillup })} onDelete={setDeleteId} />
             {saving && <div className="saving-text">Mentés…</div>}
           </>

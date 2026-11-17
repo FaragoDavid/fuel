@@ -1,7 +1,5 @@
 import { format, startOfISOWeek } from 'date-fns';
-import { ChevronDown } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import * as Select from '@radix-ui/react-select';
 import type { Fillup } from '../types/fillup';
 import type { Period } from '../types/ui';
 import { niceYTicks, scaleLinear, smoothLine } from '../utils/chart';
@@ -163,26 +161,22 @@ function renderTooltip(tooltip: { x: number; y: number; text: string }) {
   );
 }
 
-export default function TravelDistanceChart({ fillups }: { fillups: Fillup[] }) {
-  const [granularity, setGranularity] = useState<Period>('hó');
-  const [selectedYear, setSelectedYear] = useState<number | null>(() => LocalStorage.getDistanceYear());
+interface Props {
+  fillups: Fillup[];
+  multiYear: boolean;
+}
+
+export default function TravelDistanceChart({ fillups, multiYear }: Props) {
+  const [granularity, setGranularity] = useState<Period>(() => LocalStorage.getDistancePeriod() ?? 'hó');
+
+  function handleGranularity(p: Period) {
+    setGranularity(p);
+    LocalStorage.setDistancePeriod(p);
+  }
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
 
-  function handleYearChange(year: number | null) {
-    setSelectedYear(year);
-    if (year === null) LocalStorage.removeDistanceYear();
-    else LocalStorage.setDistanceYear(year);
-  }
-
-  const availableYears = useMemo(() => [...new Set(fillups.map(({ year }) => year))].sort((a, b) => a - b), [fillups]);
-
-  const fillupsOfSelectedYear = useMemo(
-    () => (selectedYear === null ? fillups : fillups.filter(({ year }) => year === selectedYear)),
-    [fillups, selectedYear],
-  );
-
   const { bars, gridLines, overallAvgY, rollingAveragePath, yearLines } = useMemo(() => {
-    const periods = calculatePeriods(fillupsOfSelectedYear, granularity);
+    const periods = calculatePeriods(fillups, granularity);
 
     const xStep = INNER_W / periods.length;
     const barW = Math.max(BAR_GAP, xStep - BAR_GAP);
@@ -202,53 +196,26 @@ export default function TravelDistanceChart({ fillups }: { fillups: Fillup[] }) 
       rollingAveragePath,
       yearLines: buildYearLines(periods, xStep),
     };
-  }, [fillupsOfSelectedYear, granularity]);
+  }, [fillups, granularity]);
 
   const baseline = PAD.top + INNER_H;
 
   return (
     <div>
       <div className="chart-tabs" style={{ marginBottom: 8 }}>
-        <button onClick={() => setGranularity('hó')} className={granularity === 'hó' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => handleGranularity('hó')} className={granularity === 'hó' ? 'tab-btn-active' : 'tab-btn'}>
           Havi
         </button>
-        <button onClick={() => setGranularity('hét')} className={granularity === 'hét' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => handleGranularity('hét')} className={granularity === 'hét' ? 'tab-btn-active' : 'tab-btn'}>
           Heti
         </button>
-        <button onClick={() => setGranularity('év')} className={granularity === 'év' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => handleGranularity('év')} className={granularity === 'év' ? 'tab-btn-active' : 'tab-btn'}>
           Éves
         </button>
-        {granularity !== 'év' && (
-          <Select.Root
-            value={selectedYear?.toString() ?? 'all'}
-            onValueChange={(val) => handleYearChange(val === 'all' ? null : parseInt(val))}
-          >
-            <Select.Trigger className="tab-btn year-select">
-              <Select.Value />
-              <Select.Icon asChild>
-                <ChevronDown size={12} />
-              </Select.Icon>
-            </Select.Trigger>
-            <Select.Portal>
-              <Select.Content className="year-select-content" position="popper" sideOffset={4}>
-                <Select.Viewport>
-                  <Select.Item value="all" className="year-select-item">
-                    <Select.ItemText>Összes év</Select.ItemText>
-                  </Select.Item>
-                  {availableYears.map((year) => (
-                    <Select.Item key={year} value={year.toString()} className="year-select-item">
-                      <Select.ItemText>{year}</Select.ItemText>
-                    </Select.Item>
-                  ))}
-                </Select.Viewport>
-              </Select.Content>
-            </Select.Portal>
-          </Select.Root>
-        )}
       </div>
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="w-full h-auto" onMouseLeave={() => setTooltip(null)}>
         {renderGridLines(gridLines, baseline)}
-        {selectedYear === null && granularity !== 'év' && renderYearLines(yearLines, baseline)}
+        {multiYear && granularity !== 'év' && renderYearLines(yearLines, baseline)}
         {renderBars(bars, baseline, setTooltip)}
         {renderOverallAverage(overallAvgY)}
         <path d={rollingAveragePath} fill="none" stroke="var(--chart-avg)" strokeWidth={2} strokeLinejoin="round" opacity={0.9} />
