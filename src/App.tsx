@@ -9,7 +9,7 @@ import Login from './components/Login';
 import StatsStrip from './components/StatsStrip';
 import { useStore } from './data/store';
 import { useAuth } from './services/auth';
-import type { Fillup } from './types/fillup';
+import type { Fillup } from './types';
 import { compareFillups } from './utils/sort';
 
 type DialogState = { mode: 'add' } | { mode: 'edit'; fillup: Fillup } | null;

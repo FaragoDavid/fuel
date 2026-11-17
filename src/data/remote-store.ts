@@ -1,7 +1,7 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, setDoc } from 'firebase/firestore';
 
 import { db } from '../services/firebase';
-import type { Fillup } from '../types/fillup';
+import type { Fillup } from '../types';
 import { CACHE_KEY, type Store } from './store';
 
 const COLLECTION = 'fillups';

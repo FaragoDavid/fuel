@@ -1,4 +1,4 @@
-import type { Fillup } from '../types/fillup';
+import type { Fillup } from '../types';
 import { CACHE_KEY, type Store } from './store';
 
 function read(): Fillup[] {

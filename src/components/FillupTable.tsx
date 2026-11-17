@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
-import type { Fillup } from '../types/fillup';
+import { useMemo } from 'react';
+
+import type { Fillup } from '../types';
 import { deriveEfficiencies } from '../utils/derive-efficiencies';
-import { formatHuf, formatDate, formatDateShort, efficiencyColor, formatNum } from '../utils/format';
+import { efficiencyColor, formatDate, formatDateShort, formatHuf, formatNum } from '../utils/format';
 
 const START_ODO = 181691;
 

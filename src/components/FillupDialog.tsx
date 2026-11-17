@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import type { Fillup } from '../types/fillup';
+
+import type { Fillup } from '../types';
 import { formatNum } from '../utils/format';
 
 interface Props {

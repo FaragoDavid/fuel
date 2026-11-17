@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
 import { differenceInDays } from 'date-fns';
-import type { Fillup } from '../types/fillup';
+import { useMemo } from 'react';
+
+import type { Fillup } from '../types';
 import { deriveEfficiencies } from '../utils/derive-efficiencies';
-import { formatNum, formatHuf } from '../utils/format';
+import { formatHuf, formatNum } from '../utils/format';
 import CyclingRateStat from './CyclingRateStat';
 
 interface Props {

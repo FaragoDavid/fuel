@@ -1,8 +1,9 @@
 import { useState } from 'react';
+
+import type { Period, Unit } from '../types';
+import { PERIODS, UNITS } from '../utils/consts';
 import { formatNum } from '../utils/format';
 import { LocalStorage } from '../utils/local-storage';
-import { UNITS, PERIODS } from '../utils/consts';
-import type { Unit, Period } from '../types/ui';
 
 interface Props {
   totalLiters: number;

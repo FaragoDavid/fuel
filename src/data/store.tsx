@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import type { Fillup } from '../types/fillup';
+import type { Fillup } from '../types';
 
 export const CACHE_KEY = 'fuel_fillups';
 
