@@ -1,10 +1,10 @@
-import { format, startOfISOWeek } from 'date-fns';
 import { useMemo, useState } from 'react';
-import type { Fillup } from '../types/fillup';
-import type { Period } from '../types/ui';
+
+import type { Fillup, Period, PeriodTotal } from '../types';
 import { niceYTicks, scaleLinear, smoothLine } from '../utils/chart';
 import { MONTHS, formatNum } from '../utils/format';
 import { LocalStorage } from '../utils/local-storage';
+import { calculatePeriods, weekStartLabel } from '../utils/period';
 
 const WIDTH = 600;
 const HEIGHT = 220;
@@ -14,11 +14,6 @@ const INNER_H = HEIGHT - PAD.top - PAD.bottom;
 const TOOLTIP_W = 140;
 const TOOLTIP_GAP = 12;
 const BAR_GAP = 4;
-
-interface PeriodTotal {
-  key: string;
-  total: number;
-}
 
 interface Bar {
   key: string;
@@ -30,35 +25,14 @@ interface Bar {
   xLabel: string;
 }
 
-function weekStartLabel(key: string): string {
-  const year = parseInt(key.slice(0, 4));
-  const week = parseInt(key.slice(6));
-  const jan4 = new Date(year, 0, 4);
-  const monday = startOfISOWeek(new Date(jan4.getFullYear(), 0, 4 + (week - 1) * 7));
-  return `${MONTHS[monday.getMonth()]} ${monday.getDate()}.`;
-}
-
-function calculatePeriods(fillups: Fillup[], granularity: Period): PeriodTotal[] {
-  const periods: PeriodTotal[] = [];
-  for (const { year, month, day, tripKm } of fillups) {
-    if (!tripKm) continue;
-    const fmt = granularity === 'hét' ? "RRRR-'W'II" : granularity === 'hó' ? 'yyyy-MM' : 'yyyy';
-    const key = format(new Date(year, month - 1, day), fmt);
-    const last = periods[periods.length - 1];
-    if (last?.key === key) last.total += tripKm;
-    else periods.push({ key, total: tripKm });
-  }
-  return periods;
-}
-
-function buildBars(periods: PeriodTotal[], granularity: Period, xStep: number, barW: number): Omit<Bar, 'top'>[] {
+function buildBars(periods: PeriodTotal[], period: Period, xStep: number, barW: number): Omit<Bar, 'top'>[] {
   return periods.map(({ key, total }, index) => {
     let xLabel: string;
     let label: string;
-    if (granularity === 'hét') {
+    if (period === 'hét') {
       xLabel = weekStartLabel(key);
       label = `${xLabel}: ${formatNum(total)} km`;
-    } else if (granularity === 'hó') {
+    } else if (period === 'hó') {
       xLabel = MONTHS[parseInt(key.slice(5)) - 1];
       label = `${key.slice(0, 4)}. ${xLabel} ${formatNum(total)} km`;
     } else {
@@ -161,30 +135,26 @@ function renderTooltip(tooltip: { x: number; y: number; text: string }) {
   );
 }
 
-interface Props {
-  fillups: Fillup[];
-  multiYear: boolean;
-}
+export default function TravelDistanceChart({ fillups, selectedYear }: { fillups: Fillup[]; selectedYear: number | null }) {
+  const [period, setPeriod] = useState<Period>(() => LocalStorage.getDistancePeriod() ?? 'hó');
 
-export default function TravelDistanceChart({ fillups, multiYear }: Props) {
-  const [granularity, setGranularity] = useState<Period>(() => LocalStorage.getDistancePeriod() ?? 'hó');
-
-  function handleGranularity(p: Period) {
-    setGranularity(p);
+  function handlePeriod(p: Period) {
+    setPeriod(p);
     LocalStorage.setDistancePeriod(p);
   }
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
 
   const { bars, gridLines, overallAvgY, rollingAveragePath, yearLines } = useMemo(() => {
-    const periods = calculatePeriods(fillups, granularity);
+    const allPeriods = calculatePeriods(fillups, period, 'travel_distance');
+    const periods = selectedYear === null ? allPeriods : allPeriods.filter(({ key }) => key.startsWith(String(selectedYear)));
 
     const xStep = INNER_W / periods.length;
     const barW = Math.max(BAR_GAP, xStep - BAR_GAP);
     const maxTotal = Math.max(...periods.map(({ total }) => total));
     const yScale = scaleLinear(0, maxTotal * 1.1, PAD.top + INNER_H, PAD.top);
-    const recentN = granularity === 'hét' ? 12 : 3;
+    const recentN = period === 'hét' ? 12 : 3;
 
-    const bars: Bar[] = buildBars(periods, granularity, xStep, barW).map((bar) => ({ ...bar, top: yScale(bar.total) }));
+    const bars: Bar[] = buildBars(periods, period, xStep, barW).map((bar) => ({ ...bar, top: yScale(bar.total) }));
     const rollingAveragePath = smoothLine(
       buildRollingAverages(periods, recentN).map((avg, index) => ({ cx: PAD.left + xStep * index + xStep / 2, cy: yScale(avg) })),
     );
@@ -196,26 +166,26 @@ export default function TravelDistanceChart({ fillups, multiYear }: Props) {
       rollingAveragePath,
       yearLines: buildYearLines(periods, xStep),
     };
-  }, [fillups, granularity]);
+  }, [fillups, period, selectedYear]);
 
   const baseline = PAD.top + INNER_H;
 
   return (
     <div>
       <div className="chart-tabs" style={{ marginBottom: 8 }}>
-        <button onClick={() => handleGranularity('hó')} className={granularity === 'hó' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => handlePeriod('hó')} className={period === 'hó' ? 'tab-btn-active' : 'tab-btn'}>
           Havi
         </button>
-        <button onClick={() => handleGranularity('hét')} className={granularity === 'hét' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => handlePeriod('hét')} className={period === 'hét' ? 'tab-btn-active' : 'tab-btn'}>
           Heti
         </button>
-        <button onClick={() => handleGranularity('év')} className={granularity === 'év' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => handlePeriod('év')} className={period === 'év' ? 'tab-btn-active' : 'tab-btn'}>
           Éves
         </button>
       </div>
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="w-full h-auto" onMouseLeave={() => setTooltip(null)}>
         {renderGridLines(gridLines, baseline)}
-        {multiYear && granularity !== 'év' && renderYearLines(yearLines, baseline)}
+        {selectedYear === null && period !== 'év' && renderYearLines(yearLines, baseline)}
         {renderBars(bars, baseline, setTooltip)}
         {renderOverallAverage(overallAvgY)}
         <path d={rollingAveragePath} fill="none" stroke="var(--chart-avg)" strokeWidth={2} strokeLinejoin="round" opacity={0.9} />

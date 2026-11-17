@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
-import type { Fillup } from '../types/fillup';
-import type { ChartView } from '../types/ui';
+
+import type { ChartType, Fillup } from '../types';
 import { formatDate } from '../utils/format';
 import { LocalStorage } from '../utils/local-storage';
-import SpendChart from './SpendChart';
 import ScatterChart from './ScatterChart';
+import SpendChart from './SpendChart';
 import TabSelect from './TabSelect';
 import TravelDistanceChart from './TravelDistanceChart';
 
@@ -27,12 +27,12 @@ function toTimestamp({ year, month, day }: Fillup): number {
 const VALID_CHART_VIEWS = new Set(CHART_OPTIONS.map((o) => o.key));
 
 export default function ChartPanel({ sortedFillups, onPointClick }: { sortedFillups: Fillup[]; onPointClick: (id: string) => void }) {
-  const [chartView, setChartView] = useState<ChartView>(() => {
-    const stored = LocalStorage.getChartView();
+  const [chartType, setChartType] = useState<ChartType>(() => {
+    const stored = LocalStorage.getChartType();
     return stored && VALID_CHART_VIEWS.has(stored) ? stored : 'liters_per_100_km';
   });
   const [selectedYear, setSelectedYear] = useState<number | null>(() => LocalStorage.getChartYear());
-  const activeView = CHART_OPTIONS.find((v) => v.key === chartView)!;
+  const activeView = CHART_OPTIONS.find((v) => v.key === chartType)!;
 
   const availableYears = useMemo(() => [...new Set(sortedFillups.map(({ year }) => year))], [sortedFillups]);
 
@@ -46,9 +46,9 @@ export default function ChartPanel({ sortedFillups, onPointClick }: { sortedFill
     [sortedFillups, selectedYear],
   );
 
-  function handleChartView(view: ChartView) {
-    setChartView(view);
-    LocalStorage.setChartView(view);
+  function handleChartType(view: ChartType) {
+    setChartType(view);
+    LocalStorage.setChartType(view);
   }
 
   function handleYearChange(val: string) {
@@ -120,13 +120,13 @@ export default function ChartPanel({ sortedFillups, onPointClick }: { sortedFill
     <div className="card mb-6">
       <div className="chart-tabs">
         <div className="sm:hidden">
-          <TabSelect value={chartView} onValueChange={(v) => handleChartView(v as ChartView)} options={CHART_SELECT_OPTIONS} />
+          <TabSelect value={chartType} onValueChange={(v) => handleChartType(v as ChartType)} options={CHART_SELECT_OPTIONS} />
         </div>
         {CHART_OPTIONS.map((chartOption) => (
           <button
             key={chartOption.key}
-            onClick={() => handleChartView(chartOption.key)}
-            className={`${chartView === chartOption.key ? 'tab-btn-active' : 'tab-btn'} hidden sm:inline-flex`}
+            onClick={() => handleChartType(chartOption.key)}
+            className={`${chartType === chartOption.key ? 'tab-btn-active' : 'tab-btn'} hidden sm:inline-flex`}
           >
             {chartOption.label}
           </button>
@@ -134,13 +134,13 @@ export default function ChartPanel({ sortedFillups, onPointClick }: { sortedFill
         <TabSelect value={selectedYear?.toString() ?? 'all'} onValueChange={handleYearChange} options={yearSelectOptions} />
       </div>
       <div className="chart-body">
-        {chartView === 'cost' ? (
-          <SpendChart fillups={filteredFillups} multiYear={selectedYear === null} />
-        ) : chartView === 'travel_distance' ? (
-          <TravelDistanceChart fillups={filteredFillups} multiYear={selectedYear === null} />
+        {chartType === 'cost' ? (
+          <SpendChart fillups={sortedFillups} selectedYear={selectedYear} />
+        ) : chartType === 'travel_distance' ? (
+          <TravelDistanceChart fillups={sortedFillups} selectedYear={selectedYear} />
         ) : (
           <ScatterChart
-            points={scatterPoints[chartView as keyof typeof scatterPoints]}
+            points={scatterPoints[chartType as keyof typeof scatterPoints]}
             yUnit={activeView.yUnit}
             yDecimals={activeView.yDecimals}
             color={CHART_COLOR}

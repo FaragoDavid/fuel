@@ -1,4 +1,4 @@
-import type { Unit, Period, ChartView } from '../types/ui';
+import type { Unit, Period, ChartType } from '../types';
 
 export class LocalStorage {
   static getFillups(): string | null {
@@ -8,10 +8,10 @@ export class LocalStorage {
     localStorage.setItem('fuel_fillups', v);
   }
 
-  static getChartView(): ChartView | null {
-    return localStorage.getItem('fuel_chart') as ChartView | null;
+  static getChartType(): ChartType | null {
+    return localStorage.getItem('fuel_chart') as ChartType | null;
   }
-  static setChartView(v: ChartView): void {
+  static setChartType(v: ChartType): void {
     localStorage.setItem('fuel_chart', v);
   }
 
