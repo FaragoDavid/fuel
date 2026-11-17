@@ -1,5 +1,7 @@
 import { format, startOfISOWeek } from 'date-fns';
+import { ChevronDown } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import * as Select from '@radix-ui/react-select';
 import type { Fillup } from '../types/fillup';
 import type { Period } from '../types/ui';
 import { niceYTicks, scaleLinear, smoothLine } from '../utils/chart';
@@ -217,19 +219,31 @@ export default function TravelDistanceChart({ fillups }: { fillups: Fillup[] }) 
           Éves
         </button>
         {granularity !== 'év' && (
-          <select
-            value={selectedYear ?? ''}
-            onChange={(e) => handleYearChange(e.target.value === '' ? null : parseInt(e.target.value))}
-            className="tab-btn"
-            style={{ marginLeft: 'auto', backgroundColor: 'transparent' }}
+          <Select.Root
+            value={selectedYear?.toString() ?? 'all'}
+            onValueChange={(val) => handleYearChange(val === 'all' ? null : parseInt(val))}
           >
-            <option value="">Összes év</option>
-            {availableYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
+            <Select.Trigger className="tab-btn year-select">
+              <Select.Value />
+              <Select.Icon asChild>
+                <ChevronDown size={12} />
+              </Select.Icon>
+            </Select.Trigger>
+            <Select.Portal>
+              <Select.Content className="year-select-content" position="popper" sideOffset={4}>
+                <Select.Viewport>
+                  <Select.Item value="all" className="year-select-item">
+                    <Select.ItemText>Összes év</Select.ItemText>
+                  </Select.Item>
+                  {availableYears.map((year) => (
+                    <Select.Item key={year} value={year.toString()} className="year-select-item">
+                      <Select.ItemText>{year}</Select.ItemText>
+                    </Select.Item>
+                  ))}
+                </Select.Viewport>
+              </Select.Content>
+            </Select.Portal>
+          </Select.Root>
         )}
       </div>
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="w-full h-auto" onMouseLeave={() => setTooltip(null)}>
