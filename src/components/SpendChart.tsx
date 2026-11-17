@@ -5,7 +5,7 @@ import { niceYTicks, scaleLinear } from '../utils/chart';
 import { BAR_CHART } from '../utils/consts';
 import { MONTHS, formatNum } from '../utils/format';
 import { LocalStorage } from '../utils/local-storage';
-import { calculatePeriods, weekStartLabel } from '../utils/period';
+import { distributeByMonth, distributeByWeek, distributeByYear, weekStartLabel } from '../utils/period';
 
 const { WIDTH, HEIGHT, PAD, INNER_W, INNER_H, TOOLTIP_W, TOOLTIP_GAP, BAR_GAP } = BAR_CHART;
 
@@ -54,7 +54,8 @@ export default function SpendChart({ fillups, selectedYear }: { fillups: Fillup[
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
 
   const { bars, gridLines, yearLines } = useMemo(() => {
-    const allPeriods = calculatePeriods(fillups, period, 'cost');
+    const distribute = { hét: distributeByWeek, hó: distributeByMonth, év: distributeByYear };
+    const allPeriods = distribute[period](fillups, 'cost');
     const periods = selectedYear === null ? allPeriods : allPeriods.filter(({ key }) => key.startsWith(String(selectedYear)));
     const xStep = INNER_W / periods.length;
     const barW = Math.max(BAR_GAP, xStep - BAR_GAP);

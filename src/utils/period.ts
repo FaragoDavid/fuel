@@ -1,6 +1,6 @@
-import { addDays, differenceInCalendarDays, endOfISOWeek, format, startOfISOWeek } from 'date-fns';
+import { addDays, addMonths, differenceInCalendarDays, endOfISOWeek, format, startOfISOWeek } from 'date-fns';
 
-import type { ChartType, Fillup, Period, PeriodTotal } from '../types';
+import type { ChartType, Fillup, PeriodTotal } from '../types';
 import { MONTHS } from './format';
 
 export function weekStartLabel(key: string): string {
@@ -8,6 +8,10 @@ export function weekStartLabel(key: string): string {
   const week = parseInt(key.slice(6));
   const monday = startOfISOWeek(new Date(year, 0, 4 + (week - 1) * 7));
   return `${MONTHS[monday.getMonth()]} ${monday.getDate()}.`;
+}
+
+function fillupDate({ year, month, day }: Fillup): Date {
+  return new Date(year, month - 1, day);
 }
 
 function getValue(fillup: Fillup, chartType: ChartType): number | undefined {
@@ -20,64 +24,79 @@ function weekKey(d: Date): string {
   return format(d, "RRRR-'W'II");
 }
 
-function distributeByWeek(fillups: Fillup[], chartType: ChartType): PeriodTotal[] {
-  const totals = new Map<string, number>();
-  const add = (key: string, n: number) => totals.set(key, (totals.get(key) ?? 0) + n);
+function weekSlices(from: Date, to: Date): { key: string; days: number }[] {
+  const slices: { key: string; days: number }[] = [];
+  let cursor = from;
+  while (cursor <= to) {
+    const weekEnd = endOfISOWeek(cursor);
+    const sliceEnd = weekEnd < to ? weekEnd : to;
+    slices.push({ key: weekKey(cursor), days: differenceInCalendarDays(sliceEnd, addDays(cursor, -1)) });
+    cursor = addDays(weekEnd, 1);
+  }
+  return slices;
+}
+
+function getWeekBuckets(fillups: Fillup[]) {
+  const weekBuckets = new Map<string, number>();
+  let nextWeekDate = startOfISOWeek(fillupDate(fillups[0]));
+  const lastFillupDate = fillupDate(fillups[fillups.length - 1]);
+  while (nextWeekDate <= lastFillupDate) {
+    weekBuckets.set(weekKey(nextWeekDate), 0);
+    nextWeekDate = addDays(nextWeekDate, 7);
+  }
+  return weekBuckets;
+}
+
+export function distributeByWeek(fillups: Fillup[], chartType: ChartType): PeriodTotal[] {
+  const weekBuckets = getWeekBuckets(fillups);
 
   for (let i = 0; i < fillups.length; i++) {
     const value = getValue(fillups[i], chartType);
     if (!value) continue;
 
-    const { year, month, day } = fillups[i];
-    const endDate = new Date(year, month - 1, day);
+    const endDate = fillupDate(fillups[i]);
     const prev = fillups[i - 1];
-    const prevDate = prev ? new Date(prev.year, prev.month - 1, prev.day) : null;
+    const prevDate = prev ? fillupDate(prev) : null;
     const totalDays = prevDate ? differenceInCalendarDays(endDate, prevDate) : 0;
 
     if (!prevDate || totalDays <= 0) {
-      add(weekKey(endDate), value);
-      continue;
-    }
-
-    let cursor = addDays(prevDate, 1);
-    while (cursor <= endDate) {
-      const weekEnd = endOfISOWeek(cursor);
-      const sliceEnd = weekEnd < endDate ? weekEnd : endDate;
-      const days = differenceInCalendarDays(sliceEnd, addDays(cursor, -1));
-      add(weekKey(cursor), (value * days) / totalDays);
-      cursor = addDays(weekEnd, 1);
+      weekBuckets.set(weekKey(endDate), (weekBuckets.get(weekKey(endDate)) ?? 0) + value);
+    } else {
+      for (const { key, days } of weekSlices(addDays(prevDate, 1), endDate)) {
+        weekBuckets.set(key, (weekBuckets.get(key) ?? 0) + (value * days) / totalDays);
+      }
     }
   }
 
-  return [...totals.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([key, total]) => ({ key, total }));
+  return [...weekBuckets.entries()].map(([key, total]) => ({ key, total }));
 }
 
 function getMonthBuckets(fillups: Fillup[]) {
-  const totals = new Map<string, number>();
-  for (let y = fillups[0].year; y <= fillups[fillups.length - 1].year; y++) {
-    for (let m = 1; m <= 12; m++) {
-      totals.set(`${y}-${String(m).padStart(2, '0')}`, 0);
-    }
+  const monthBuckets = new Map<string, number>();
+  let nextFillupDate = fillupDate(fillups[0]);
+  const lastFillupDate = fillupDate(fillups[fillups.length - 1]);
+
+  while (nextFillupDate <= lastFillupDate) {
+    monthBuckets.set(format(nextFillupDate, 'yyyy-MM'), 0);
+    nextFillupDate = addMonths(nextFillupDate, 1);
   }
-  return totals;
+
+  return monthBuckets;
 }
 
-function distributeByMonth(fillups: Fillup[], chartType: ChartType): PeriodTotal[] {
+export function distributeByMonth(fillups: Fillup[], chartType: ChartType): PeriodTotal[] {
   if (fillups.length === 0) return [];
-
-  const totals = getMonthBuckets(fillups);
-
+  const monthBuckets = getMonthBuckets(fillups);
   for (const fillup of fillups) {
     const value = getValue(fillup, chartType);
     if (!value) continue;
-    const { year, month, day } = fillup;
-    const key = format(new Date(year, month - 1, day), 'yyyy-MM');
-    totals.set(key, (totals.get(key) ?? 0) + value);
+    const key = format(fillupDate(fillup), 'yyyy-MM');
+    monthBuckets.set(key, (monthBuckets.get(key) ?? 0) + value);
   }
-  return [...totals.entries()].map(([key, total]) => ({ key, total }));
+  return [...monthBuckets.entries()].map(([key, total]) => ({ key, total }));
 }
 
-function distributeByYear(fillups: Fillup[], chartType: ChartType): PeriodTotal[] {
+export function distributeByYear(fillups: Fillup[], chartType: ChartType): PeriodTotal[] {
   const totals = new Map<string, number>();
   for (const fillup of fillups) {
     const value = getValue(fillup, chartType);
@@ -86,11 +105,4 @@ function distributeByYear(fillups: Fillup[], chartType: ChartType): PeriodTotal[
     totals.set(key, (totals.get(key) ?? 0) + value);
   }
   return [...totals.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([key, total]) => ({ key, total }));
-}
-
-export function calculatePeriods(fillups: Fillup[], period: Period, chartType: ChartType): PeriodTotal[] {
-  if (period === 'hét') return distributeByWeek(fillups, chartType);
-  if (period === 'hó') return distributeByMonth(fillups, chartType);
-  if (period === 'év') return distributeByYear(fillups, chartType);
-  throw new Error(`Unknown period: ${period}`);
 }
