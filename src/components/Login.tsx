@@ -13,7 +13,9 @@ export default function Login() {
     <div className="flex items-center justify-center min-h-screen">
       <div className="card p-8 max-w-sm w-full text-center">
         <h1 className="page-title mb-2">Tankolások</h1>
-        <p className="text-sm text-gray-500 mb-6">Bejelentkezés szükséges</p>
+        <p className="text-sm mb-6" style={{ color: 'var(--color-text)' }}>
+          Bejelentkezés szükséges
+        </p>
         <button onClick={handleSignIn} className="btn-primary w-full flex items-center justify-center gap-2">
           <svg width="18" height="18" viewBox="0 0 18 18">
             <path

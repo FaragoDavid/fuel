@@ -21,10 +21,7 @@
 
     /* Surfaces */
     --color-page-bg: var(--teal-950);
-    --color-card-bg: var(--cream);
-    --color-header-bg: var(--teal-800);
-    --color-stat-bg: var(--teal-800);
-    --color-chart-bg: var(--teal-800);
+    --color-panel-bg: var(--teal-800);
     --color-table-header-bg: var(--teal-600);
     --color-table-bg: var(--teal-900);
     --color-table-row-even: var(--teal-900);
@@ -88,7 +85,7 @@
     justify-content: space-between;
     margin-bottom: calc(var(--spacing) * 6);
     padding: calc(var(--spacing) * 4) calc(var(--spacing) * 5);
-    background-color: var(--color-header-bg);
+    background-color: var(--color-panel-bg);
     border-radius: var(--radius-2xl);
   }
 
@@ -100,7 +97,7 @@
 
   /* Cards */
   .card {
-    background-color: var(--color-card-bg);
+    background-color: var(--color-panel-bg);
     border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-sm);
   }
@@ -141,7 +138,7 @@
   }
 
   .stat-card {
-    background-color: var(--color-stat-bg);
+    background-color: var(--color-panel-bg);
     border-radius: var(--radius-xl);
     padding: calc(var(--spacing) * 4);
     box-shadow: var(--shadow-sm);
@@ -303,7 +300,7 @@
     flex-wrap: wrap;
     gap: calc(var(--spacing) * 1);
     padding: calc(var(--spacing) * 2);
-    background-color: var(--color-chart-bg);
+    background-color: var(--color-panel-bg);
     border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
   }
 
@@ -360,7 +357,7 @@
 
   .chart-body {
     padding: calc(var(--spacing) * 4);
-    background-color: var(--color-chart-bg);
+    background-color: var(--color-panel-bg);
     border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
   }
 
