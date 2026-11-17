@@ -2,36 +2,28 @@
 
 @layer theme {
   :root {
-    /* Palette — teal (Tailwind built-ins + custom gap values) */
+    /* Palette */
     --teal-600: var(--color-teal-600);
     --teal-700: var(--color-teal-700);
     --teal-800: var(--color-teal-800);
     --teal-900: var(--color-teal-900);
     --teal-950: var(--color-teal-950);
-
-    /* Palette — browns & ambers */
-    --brown-950: #1a0c03;
-    --brown-900: #2a1205;
-    --brown-600: #a0521a;
-    --brown-400: #c47840;
-    --amber-700: #a85a18;
-    --amber-600: #c4680e;
     --amber-500: #e8903a;
-    --amber-300: #e0b48a;
-    --amber-200: #e8b87a;
-    --amber-100: #d4b890;
+    --amber-700: #a85a18;
+    --amber-800: #4a2008;
+    --amber-900: #2a1205;
     --cream: #fce8cc;
 
     /* Brand */
     --color-primary: var(--teal-600);
     --color-interactive: var(--teal-700);
-    --color-btn-secondary-hover: var(--amber-100);
+    --color-btn-secondary-hover: var(--amber-900);
 
     /* Surfaces */
     --color-page-bg: var(--teal-950);
     --color-card-bg: var(--cream);
     --color-header-bg: var(--teal-800);
-    --color-header-text: var(--amber-500);
+    --color-header-text: var(--cream);
     --color-stat-bg: var(--teal-800);
     --color-stat-text: var(--cream);
     --color-stat-label: var(--cream);
@@ -42,26 +34,19 @@
     --color-table-row-even: var(--teal-900);
     --color-table-row-odd: var(--teal-800);
     --color-table-text: var(--cream);
-    --color-table-text-muted: var(--amber-300);
-    --color-table-text-dim: var(--amber-100);
 
     /* Modal */
-    --color-modal-bg: var(--brown-900);
+    --color-modal-bg: var(--amber-800);
     --color-modal-text: var(--cream);
     --color-modal-label: var(--amber-500);
-    --color-input-bg: var(--brown-950);
+    --color-input-bg: var(--amber-900);
     --color-input-text: var(--cream);
-    --color-input-border: var(--amber-600);
 
     /* Text */
     --color-text-on-dark: var(--cream);
-    --color-text: var(--brown-900);
-    --color-text-muted: var(--brown-600);
-    --color-text-dim: var(--brown-400);
+    --color-text-muted: var(--amber-500);
 
     /* Borders */
-    --color-border: var(--amber-200);
-    --color-border-input: var(--amber-600);
     --color-focus: var(--amber-500);
 
     /* Chart */
@@ -82,7 +67,6 @@
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: cover;
-    color: var(--color-text);
     overflow-x: hidden;
   }
 }
@@ -272,26 +256,6 @@
     background-color: var(--color-interactive);
   }
 
-  .btn-icon-edit,
-  .btn-icon-delete {
-    padding: calc(var(--spacing) * 1);
-    border-radius: var(--radius-sm);
-    color: var(--color-text-on-dark);
-  }
-
-  .btn-icon-edit:hover,
-  .btn-icon-delete:hover {
-    background-color: var(--color-interactive);
-  }
-
-  .btn-icon-edit:hover {
-    color: var(--color-text-on-dark);
-  }
-
-  .btn-icon-delete:hover {
-    color: var(--color-red-300);
-  }
-
   .btn-header-action {
     display: none;
     padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
@@ -422,7 +386,7 @@
   }
 
   .form-input {
-    border: 1px solid var(--color-input-border);
+    border: 1px solid var(--color-focus);
     border-radius: var(--radius-lg);
     padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 3);
     font-size: var(--text-sm);
@@ -523,41 +487,15 @@
     white-space: nowrap;
   }
 
-  .table-cell-muted {
-    padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
-    text-align: right;
-    color: var(--color-table-text-muted);
-  }
-
-  .table-cell-dim {
-    padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
-    text-align: right;
-    color: var(--color-table-text-dim);
-  }
-
   .table-cell-desktop {
     padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
     text-align: right;
     color: var(--color-table-text);
   }
 
-  .table-cell-muted-desktop {
-    padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
-    text-align: right;
-    color: var(--color-table-text-muted);
-  }
-
-  .table-cell-dim-desktop {
-    padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4);
-    text-align: right;
-    color: var(--color-table-text-dim);
-  }
-
   @media (max-width: 639px) {
     .table-header-cell-desktop,
-    .table-cell-desktop,
-    .table-cell-muted-desktop,
-    .table-cell-dim-desktop {
+    .table-cell-desktop {
       display: none;
     }
   }

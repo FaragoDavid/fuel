@@ -65,7 +65,7 @@ export default function FillupTable({ sortedFillups, onEdit, onDelete }: Props) 
                 </td>
                 <td className="table-cell">{fillup.totalCost ? formatHuf(fillup.totalCost) : '—'}</td>
                 <td className="table-cell">{fillup.liters?.toFixed(2) ?? '—'}</td>
-                <td className="table-cell-muted-desktop">{fpl ? fpl.toFixed(0) : '—'}</td>
+                <td className="table-cell-desktop">{fpl ? fpl.toFixed(0) : '—'}</td>
                 <td className="table-cell-desktop">
                   {fillup.tripKm != null ? (
                     fillup.estimated ? (
@@ -80,14 +80,14 @@ export default function FillupTable({ sortedFillups, onEdit, onDelete }: Props) 
                 <td className="table-cell-desktop">
                   {l100 ? <span style={{ color: efficiencyColor(l100, l100Min, l100Max) }}>{l100.toFixed(1)}</span> : '—'}
                 </td>
-                <td className="table-cell-dim-desktop">
+                <td className="table-cell-desktop">
                   {odo != null ? odoIsReal ? formatNum(odo) : <span className="estimated">≈ {formatNum(odo)}</span> : '—'}
                 </td>
                 <td className="table-cell-actions">
-                  <button onClick={() => onEdit(fillup)} className="btn-icon-edit">
+                  <button onClick={() => onEdit(fillup)} className="btn-icon">
                     <Pencil size={14} />
                   </button>
-                  <button onClick={() => onDelete(fillup.id)} className="btn-icon-delete">
+                  <button onClick={() => onDelete(fillup.id)} className="btn-icon">
                     <Trash2 size={14} />
                   </button>
                 </td>

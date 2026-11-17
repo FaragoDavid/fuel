@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
+import ConfirmDialog from './components/ConfirmDialog';
 import FillupDialog from './components/FillupDialog';
 import FillupTable from './components/FillupTable';
 import Login from './components/Login';
@@ -222,21 +223,7 @@ export default function App() {
         <FillupDialog initial={dialog.mode === 'edit' ? dialog.fillup : undefined} onSave={handleSave} onCancel={() => setDialog(null)} />
       )}
 
-      {deleteId && (
-        <div className="overlay">
-          <div className="modal max-w-xs p-6 text-center">
-            <p className="confirm-text">Biztosan törlöd ezt a tankolást?</p>
-            <div className="flex gap-2 justify-center">
-              <button onClick={() => setDeleteId(null)} className="btn-secondary">
-                Mégse
-              </button>
-              <button onClick={() => handleDelete(deleteId)} className="btn-danger">
-                Törlés
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {deleteId && <ConfirmDialog onConfirm={() => handleDelete(deleteId)} onCancel={() => setDeleteId(null)} />}
     </div>
   );
 }

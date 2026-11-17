@@ -155,7 +155,7 @@ function renderTooltip(tooltip: { x: number; y: number; text: string }) {
   const tx = fitsRight ? x + TOOLTIP_GAP : x - TOOLTIP_W - TOOLTIP_GAP;
   return (
     <g>
-      <rect x={tx} y={y - 18} width={TOOLTIP_W} height={22} rx={4} fill="#2a1205ee" />
+      <rect x={tx} y={y - 18} width={TOOLTIP_W} height={22} rx={4} fill="var(--color-modal-bg)" fillOpacity={0.93} />
       <text x={tx + 6} y={y - 3} fontSize={11} fill="var(--chart-trend)">
         {text}
       </text>
