@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { scaleLinear, smoothLine, niceYTicks } from '../utils/chart';
+import { scaleLinear, smoothLine, niceYTicks, rollingAverage } from '../utils/chart';
 
 interface DataPoint {
   id: string;
@@ -25,16 +25,6 @@ const INNER_H = HEIGHT - PAD.top - PAD.bottom;
 const TOOLTIP_W = 110;
 const TOOLTIP_H = 34;
 const TOOLTIP_GAP = 12;
-
-function rollingAverage(values: number[], window: number): number[] {
-  return values.map((_, index) => {
-    const half = Math.floor(window / 2);
-    const start = Math.max(0, index - half);
-    const end = Math.min(values.length - 1, index + half);
-    const slice = values.slice(start, end + 1);
-    return slice.reduce((sum, val) => sum + val, 0) / slice.length;
-  });
-}
 
 export default function ScatterChart({ points, yUnit, yDecimals = 1, trendWindow = 5, onPointClick }: Props) {
   const [tooltip, setTooltip] = useState<{ x: number; y: number; value: string; dateLine: string } | null>(null);

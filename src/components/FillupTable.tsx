@@ -3,23 +3,8 @@ import { useMemo } from 'react';
 
 import type { Fillup } from '../types';
 import { deriveEfficiencies } from '../utils/derive-efficiencies';
+import { deriveOdometers } from '../utils/derive-odometers';
 import { efficiencyColor, formatDate, formatDateShort, formatHuf, formatNum } from '../utils/format';
-
-const START_ODO = 181691;
-
-function deriveOdometers(sorted: Fillup[]): Map<string, number> {
-  const odometerById = new Map<string, number>();
-  let running = START_ODO;
-  for (const fillup of sorted) {
-    if (fillup.odometer != null) {
-      running = fillup.odometer;
-    } else if (fillup.tripKm != null) {
-      running = running + fillup.tripKm;
-    }
-    odometerById.set(fillup.id, Math.round(running * 10) / 10);
-  }
-  return odometerById;
-}
 
 interface Props {
   sortedFillups: Fillup[];
