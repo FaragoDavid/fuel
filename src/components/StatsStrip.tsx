@@ -1,8 +1,7 @@
-import { differenceInDays } from 'date-fns';
 import { useMemo } from 'react';
 
 import type { Fillup } from '../types';
-import { deriveEfficiencies } from '../utils/derive-efficiencies';
+import { deriveAvgFtPer100km, deriveAvgL100, deriveSpanDays, deriveTotalKm, deriveTotalLiters } from '../utils/derive-stats';
 import { formatHuf, formatNum } from '../utils/format';
 import CyclingRateStat from './CyclingRateStat';
 
@@ -11,31 +10,16 @@ interface Props {
 }
 
 export default function StatsStrip({ sortedFillups }: Props) {
-  const stats = useMemo(() => {
-    const efficiencies = [...deriveEfficiencies(sortedFillups).values()];
-
-    const costsPerHundredKm = sortedFillups
-      .filter(({ totalCost, tripKm, estimated }) => totalCost && tripKm && !estimated)
-      .map(({ totalCost, tripKm }) => (totalCost! / tripKm!) * 100);
-
-    const totalLiters = sortedFillups.filter(({ liters }) => liters).reduce((sum, f) => sum + f.liters!, 0);
-    const totalKm = sortedFillups.filter(({ tripKm }) => tripKm).reduce((sum, f) => sum + f.tripKm!, 0);
-
-    let spanDays = 0;
-    if (sortedFillups.length >= 2) {
-      const first = sortedFillups[0];
-      const last = sortedFillups[sortedFillups.length - 1];
-      spanDays = differenceInDays(new Date(last.year, last.month - 1, last.day), new Date(first.year, first.month - 1, first.day));
-    }
-
-    return {
-      avgL100: efficiencies.length ? efficiencies.reduce((sum, val) => sum + val, 0) / efficiencies.length : null,
-      avgFtPer100km: costsPerHundredKm.length ? costsPerHundredKm.reduce((sum, v) => sum + v, 0) / costsPerHundredKm.length : null,
-      totalLiters,
-      totalKm,
-      spanDays,
-    };
-  }, [sortedFillups]);
+  const stats = useMemo(
+    () => ({
+      avgL100: deriveAvgL100(sortedFillups),
+      avgFtPer100km: deriveAvgFtPer100km(sortedFillups),
+      totalLiters: deriveTotalLiters(sortedFillups),
+      totalKm: deriveTotalKm(sortedFillups),
+      spanDays: deriveSpanDays(sortedFillups),
+    }),
+    [sortedFillups],
+  );
 
   return (
     <div className="stats-grid">
