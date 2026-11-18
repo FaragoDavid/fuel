@@ -1,37 +1,25 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
-import type { ChartType, Fillup } from '../types';
-import { formatDate } from '../utils/format';
-import { LocalStorage } from '../utils/local-storage';
+import { useChartPreferences } from '../hooks/useChartPreferences';
+import type { ChartOption, ChartType, Fillup } from '../types';
+import { deriveL100Points, deriveFtkmPoints, deriveFtlPoints } from '../utils/derive-scatter-points';
 import ScatterChart from './ScatterChart';
 import SpendChart from './SpendChart';
 import TabSelect from './TabSelect';
 import TravelDistanceChart from './TravelDistanceChart';
 
-const CHART_OPTIONS = [
-  { key: 'liters_per_100_km', label: 'Fogyasztás', yUnit: 'l/100km', yDecimals: 1 },
-  { key: 'huf_per_liter', label: 'Üzemanyagár', yUnit: 'Ft/l', yDecimals: 0 },
-  { key: 'huf_per_km', label: 'Kilométerköltség', yUnit: 'Ft/km', yDecimals: 0 },
-  { key: 'cost', label: 'Költség', yUnit: '', yDecimals: 0 },
-  { key: 'travel_distance', label: 'Megtett km', yUnit: '', yDecimals: 0 },
-] as const;
+const CHART_OPTIONS: readonly ChartOption[] = [
+  { key: 'liters_per_100_km', kind: 'scatter', label: 'Fogyasztás', yUnit: 'l/100km', yDecimals: 1 },
+  { key: 'huf_per_liter', kind: 'scatter', label: 'Üzemanyagár', yUnit: 'Ft/l', yDecimals: 0 },
+  { key: 'huf_per_km', kind: 'scatter', label: 'Kilométerköltség', yUnit: 'Ft/km', yDecimals: 0 },
+  { key: 'cost', kind: 'bar', label: 'Költség', BarComponent: SpendChart },
+  { key: 'travel_distance', kind: 'bar', label: 'Megtett km', BarComponent: TravelDistanceChart },
+];
 
 const CHART_SELECT_OPTIONS = CHART_OPTIONS.map(({ key, label }) => ({ value: key, label }));
 
-const CHART_COLOR = 'var(--chart-color)';
-
-function toTimestamp({ year, month, day }: Fillup): number {
-  return new Date(year, month - 1, day).getTime();
-}
-
-const VALID_CHART_VIEWS = new Set(CHART_OPTIONS.map((o) => o.key));
-
 export default function ChartPanel({ sortedFillups, onPointClick }: { sortedFillups: Fillup[]; onPointClick: (id: string) => void }) {
-  const [chartType, setChartType] = useState<ChartType>(() => {
-    const stored = LocalStorage.getChartType();
-    return stored && VALID_CHART_VIEWS.has(stored) ? stored : 'liters_per_100_km';
-  });
-  const [selectedYear, setSelectedYear] = useState<number | null>(() => LocalStorage.getChartYear());
+  const { chartType, selectedYear, setChartType, setSelectedYear } = useChartPreferences();
   const activeView = CHART_OPTIONS.find((v) => v.key === chartType)!;
 
   const availableYears = useMemo(() => [...new Set(sortedFillups.map(({ year }) => year))], [sortedFillups]);
@@ -46,104 +34,44 @@ export default function ChartPanel({ sortedFillups, onPointClick }: { sortedFill
     [sortedFillups, selectedYear],
   );
 
-  function handleChartType(view: ChartType) {
-    setChartType(view);
-    LocalStorage.setChartType(view);
-  }
-
-  function handleYearChange(val: string) {
-    const year = val === 'all' ? null : parseInt(val);
-    setSelectedYear(year);
-    if (year === null) LocalStorage.removeChartYear();
-    else LocalStorage.setChartYear(year);
-  }
-
-  const l100Points = useMemo(() => {
-    const points = [];
-    for (let index = 1; index < filteredFillups.length; index++) {
-      const prev = filteredFillups[index - 1];
-      const curr = filteredFillups[index];
-      if (!prev.liters || !curr.tripKm || curr.estimated || prev.estimated) continue;
-      const l100 = (prev.liters / curr.tripKm) * 100;
-      points.push({
-        id: curr.id,
-        timestamp: toTimestamp(curr),
-        dateLine: formatDate(curr.year, curr.month, curr.day),
-        value: l100,
-        label: `${l100.toFixed(1)} l/100km`,
-      });
-    }
-    return points;
-  }, [filteredFillups]);
-
-  const ftlPoints = useMemo(
-    () =>
-      filteredFillups
-        .filter((fillup) => fillup.totalCost && fillup.liters)
-        .map((fillup) => {
-          const pricePerLiter = fillup.totalCost! / fillup.liters!;
-          return {
-            id: fillup.id,
-            timestamp: toTimestamp(fillup),
-            dateLine: formatDate(fillup.year, fillup.month, fillup.day),
-            value: pricePerLiter,
-            label: `${pricePerLiter.toFixed(0)} Ft/l`,
-          };
-        }),
-    [filteredFillups],
-  );
-
-  const ftkmPoints = useMemo(() => {
-    const points = [];
-    for (let index = 1; index < filteredFillups.length; index++) {
-      const prev = filteredFillups[index - 1];
-      const curr = filteredFillups[index];
-      if (!prev.totalCost || !curr.tripKm) continue;
-      const costPerKm = prev.totalCost / curr.tripKm;
-      points.push({
-        id: curr.id,
-        timestamp: toTimestamp(curr),
-        dateLine: formatDate(curr.year, curr.month, curr.day),
-        value: costPerKm,
-        label: `${costPerKm.toFixed(0)} Ft/km`,
-      });
-    }
-    return points;
-  }, [filteredFillups]);
-
   const scatterPoints = useMemo(
-    () => ({ liters_per_100_km: l100Points, huf_per_liter: ftlPoints, huf_per_km: ftkmPoints }),
-    [l100Points, ftlPoints, ftkmPoints],
+    () => ({
+      liters_per_100_km: deriveL100Points(filteredFillups),
+      huf_per_liter: deriveFtlPoints(filteredFillups),
+      huf_per_km: deriveFtkmPoints(filteredFillups),
+    }),
+    [filteredFillups],
   );
 
   return (
     <div className="card mb-6">
       <div className="chart-tabs">
         <div className="sm:hidden">
-          <TabSelect value={chartType} onValueChange={(v) => handleChartType(v as ChartType)} options={CHART_SELECT_OPTIONS} />
+          <TabSelect value={chartType} onValueChange={(v) => setChartType(v as ChartType)} options={CHART_SELECT_OPTIONS} />
         </div>
         {CHART_OPTIONS.map((chartOption) => (
           <button
             key={chartOption.key}
-            onClick={() => handleChartType(chartOption.key)}
+            onClick={() => setChartType(chartOption.key)}
             className={`${chartType === chartOption.key ? 'tab-btn-active' : 'tab-btn'} hidden sm:inline-flex`}
           >
             {chartOption.label}
           </button>
         ))}
-        <TabSelect value={selectedYear?.toString() ?? 'all'} onValueChange={handleYearChange} options={yearSelectOptions} />
+        <TabSelect
+          value={selectedYear?.toString() ?? 'all'}
+          onValueChange={(v) => setSelectedYear(v === 'all' ? null : parseInt(v))}
+          options={yearSelectOptions}
+        />
       </div>
       <div className="chart-body">
-        {chartType === 'cost' ? (
-          <SpendChart fillups={sortedFillups} selectedYear={selectedYear} />
-        ) : chartType === 'travel_distance' ? (
-          <TravelDistanceChart fillups={sortedFillups} selectedYear={selectedYear} />
+        {activeView.kind === 'bar' ? (
+          <activeView.BarComponent fillups={sortedFillups} selectedYear={selectedYear} />
         ) : (
           <ScatterChart
-            points={scatterPoints[chartType as keyof typeof scatterPoints]}
+            points={scatterPoints[activeView.key]}
             yUnit={activeView.yUnit}
             yDecimals={activeView.yDecimals}
-            color={CHART_COLOR}
             trendWindow={10}
             onPointClick={onPointClick}
           />

@@ -1,6 +1,6 @@
 import { addDays, addMonths, differenceInCalendarDays, endOfISOWeek, format, startOfISOWeek } from 'date-fns';
 
-import type { ChartType, Fillup, PeriodTotal } from '../types';
+import type { BarChartKey, Fillup, PeriodTotal } from '../types';
 import { MONTHS } from './format';
 
 export function weekStartLabel(key: string): string {
@@ -12,12 +12,6 @@ export function weekStartLabel(key: string): string {
 
 function fillupDate({ year, month, day }: Fillup): Date {
   return new Date(year, month - 1, day);
-}
-
-function getValue(fillup: Fillup, chartType: ChartType): number | undefined {
-  if (chartType === 'travel_distance') return fillup.tripKm;
-  if (chartType === 'cost') return fillup.totalCost;
-  throw new Error(`Periods unimplemented for chart ${chartType}`);
 }
 
 function weekKey(d: Date): string {
@@ -47,11 +41,11 @@ function getWeekBuckets(fillups: Fillup[]) {
   return weekBuckets;
 }
 
-export function distributeByWeek(fillups: Fillup[], chartType: ChartType): PeriodTotal[] {
+export function distributeByWeek(fillups: Fillup[], chartType: BarChartKey): PeriodTotal[] {
   const weekBuckets = getWeekBuckets(fillups);
 
   for (let i = 0; i < fillups.length; i++) {
-    const value = getValue(fillups[i], chartType);
+    const value = chartType === 'travel_distance' ? fillups[i].tripKm : fillups[i].totalCost;
     if (!value) continue;
 
     const endDate = fillupDate(fillups[i]);
@@ -84,11 +78,11 @@ function getMonthBuckets(fillups: Fillup[]) {
   return monthBuckets;
 }
 
-export function distributeByMonth(fillups: Fillup[], chartType: ChartType): PeriodTotal[] {
+export function distributeByMonth(fillups: Fillup[], chartType: BarChartKey): PeriodTotal[] {
   if (fillups.length === 0) return [];
   const monthBuckets = getMonthBuckets(fillups);
   for (const fillup of fillups) {
-    const value = getValue(fillup, chartType);
+    const value = chartType === 'travel_distance' ? fillup.tripKm : fillup.totalCost;
     if (!value) continue;
     const key = format(fillupDate(fillup), 'yyyy-MM');
     monthBuckets.set(key, (monthBuckets.get(key) ?? 0) + value);
@@ -96,10 +90,10 @@ export function distributeByMonth(fillups: Fillup[], chartType: ChartType): Peri
   return [...monthBuckets.entries()].map(([key, total]) => ({ key, total }));
 }
 
-export function distributeByYear(fillups: Fillup[], chartType: ChartType): PeriodTotal[] {
+export function distributeByYear(fillups: Fillup[], chartType: BarChartKey): PeriodTotal[] {
   const totals = new Map<string, number>();
   for (const fillup of fillups) {
-    const value = getValue(fillup, chartType);
+    const value = chartType === 'travel_distance' ? fillup.tripKm : fillup.totalCost;
     if (!value) continue;
     const key = String(fillup.year);
     totals.set(key, (totals.get(key) ?? 0) + value);

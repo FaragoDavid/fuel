@@ -12,7 +12,6 @@ interface DataPoint {
 interface Props {
   points: DataPoint[];
   yUnit: string;
-  color: string;
   yDecimals?: number;
   trendWindow?: number;
   onPointClick?: (id: string) => void;
@@ -37,7 +36,7 @@ function rollingAverage(values: number[], window: number): number[] {
   });
 }
 
-export default function ScatterChart({ points, yUnit, color, yDecimals = 1, trendWindow = 5, onPointClick }: Props) {
+export default function ScatterChart({ points, yUnit, yDecimals = 1, trendWindow = 5, onPointClick }: Props) {
   const [tooltip, setTooltip] = useState<{ x: number; y: number; value: string; dateLine: string } | null>(null);
 
   const { scaledPoints, trendPath, yScale, yTicks } = useMemo(() => {
@@ -124,7 +123,7 @@ export default function ScatterChart({ points, yUnit, color, yDecimals = 1, tren
           onClick={() => onPointClick?.(points[index].id)}
           style={{ cursor: onPointClick ? 'pointer' : 'default' }}
         >
-          <circle cx={cx} cy={cy} r={3} fill={color} opacity={0.8} />
+          <circle cx={cx} cy={cy} r={3} fill={'var(--chart-color)'} opacity={0.8} />
           <circle cx={cx} cy={cy} r={10} fill="transparent" />
         </g>
       ))}
