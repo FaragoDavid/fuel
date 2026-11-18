@@ -15,7 +15,7 @@ type DialogState = { mode: 'add' } | { mode: 'edit'; fillup: Fillup } | null;
 
 export default function App() {
   const user = useAuth();
-  const { loaded, sortedFillups, error, saving, addFillup, updateFillup, deleteFillup } = useFillups(user);
+  const { loaded, sortedFillups, error, saving, addFillup, updateFillup, deleteFillup } = useFillups(!!user);
   const [dialog, setDialog] = useState<DialogState>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 

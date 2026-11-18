@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import type { Bar, Fillup, Period, PeriodTotal } from '../types';
+import type { Bar, Fillup, Period, PeriodTotal, YearLine } from '../types';
 import { niceYTicks, scaleLinear, smoothLine } from '../utils/chart';
 import { BAR_CHART } from '../utils/consts';
 import { MONTHS, formatNum } from '../utils/format';
@@ -34,8 +34,8 @@ function buildRollingAverages(periods: PeriodTotal[], recentN: number): number[]
   });
 }
 
-function buildYearLines(periods: PeriodTotal[], xStep: number): { x: number; year: number }[] {
-  const yearLines: { x: number; year: number }[] = [];
+function buildYearLines(periods: PeriodTotal[], xStep: number): YearLine[] {
+  const yearLines: YearLine[] = [];
   for (let i = 1; i < periods.length; i++) {
     const prevYear = parseInt(periods[i - 1].key.slice(0, 4));
     const currYear = parseInt(periods[i].key.slice(0, 4));
@@ -65,7 +65,7 @@ function renderGridLines(gridLines: { tick: number; cy: number }[], baseline: nu
   });
 }
 
-function renderYearLines(yearLines: { x: number; year: number }[], baseline: number) {
+function renderYearLines(yearLines: YearLine[], baseline: number) {
   return yearLines.map(({ x, year }) => (
     <g key={year}>
       <line x1={x} x2={x} y1={PAD.top} y2={baseline} stroke="var(--chart-axis)" strokeWidth={1} opacity={0.5} />

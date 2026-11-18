@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { User } from 'firebase/auth';
 
 import { useStore } from '../data/store';
 import type { Fillup } from '../types';
 import { compareFillups } from '../utils/sort';
 
-export function useFillups(user: User | null | undefined) {
+export function useFillups(enabled: boolean) {
   const store = useStore();
   const [fillups, setFillups] = useState<Fillup[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -14,12 +13,12 @@ export function useFillups(user: User | null | undefined) {
   const sortedFillups = useMemo(() => (fillups ? [...fillups].sort(compareFillups) : []), [fillups]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!enabled) return;
     store
       .readFillups()
       .then(setFillups)
       .catch((e: Error) => setError(e.message));
-  }, [user]);
+  }, [enabled]);
 
   async function addFillup(fillup: Omit<Fillup, 'id'>): Promise<void> {
     if (!fillups) return;

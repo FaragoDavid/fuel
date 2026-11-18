@@ -3,7 +3,7 @@ import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from
 import type { User } from 'firebase/auth';
 import { app } from './firebase';
 
-type AuthUser = User | null | undefined;
+export type AuthUser = User | null | undefined;
 
 export function useAuth(): AuthUser {
   const [user, setUser] = useState<AuthUser>(undefined);

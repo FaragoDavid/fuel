@@ -14,6 +14,12 @@ export interface Fillup {
 
 export type Unit = 'l' | 'km';
 export type Period = 'hét' | 'hó' | 'év';
+export type BarChartId = 'spend' | 'distance';
+
+export interface YearLine {
+  x: number;
+  year: number;
+}
 export type ScatterChartKey = 'liters_per_100_km' | 'huf_per_liter' | 'huf_per_km';
 export type BarChartKey = 'cost' | 'travel_distance';
 export type ChartType = ScatterChartKey | BarChartKey;

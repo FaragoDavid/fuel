@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import type { Bar, Fillup, Period, PeriodTotal } from '../types';
+import type { Bar, Fillup, Period, PeriodTotal, YearLine } from '../types';
 import { niceYTicks, scaleLinear } from '../utils/chart';
 import { BAR_CHART } from '../utils/consts';
 import { MONTHS, formatNum } from '../utils/format';
@@ -34,8 +34,8 @@ function calculateLabelStep(barCount: number): number {
   return 1;
 }
 
-function buildYearLines(periods: PeriodTotal[], xStep: number): { x: number; year: number }[] {
-  const yearLines: { x: number; year: number }[] = [];
+function buildYearLines(periods: PeriodTotal[], xStep: number): YearLine[] {
+  const yearLines: YearLine[] = [];
   for (let i = 1; i < periods.length; i++) {
     const prevYear = parseInt(periods[i - 1].key.slice(0, 4));
     const currYear = parseInt(periods[i].key.slice(0, 4));

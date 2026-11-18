@@ -1,16 +1,9 @@
 import { useMemo, useState } from 'react';
 import { scaleLinear, smoothLine, niceYTicks, rollingAverage } from '../utils/chart';
-
-interface DataPoint {
-  id: string;
-  timestamp: number;
-  dateLine: string;
-  value: number;
-  label: string;
-}
+import type { ScatterPoint } from '../utils/derive-scatter-points';
 
 interface Props {
-  points: DataPoint[];
+  points: ScatterPoint[];
   yUnit: string;
   yDecimals?: number;
   trendWindow?: number;

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import type { Period } from '../types';
+import type { BarChartId, Period } from '../types';
 import { LocalStorage } from '../utils/local-storage';
 
-export function useBarChartPeriod(key: 'spend' | 'distance'): [Period, (p: Period) => void] {
+export function useBarChartPeriod(key: BarChartId): [Period, (p: Period) => void] {
   const [period, setPeriodState] = useState<Period>(
     () => (key === 'spend' ? LocalStorage.getSpendPeriod() : LocalStorage.getDistancePeriod()) ?? 'hó',
   );

@@ -1,18 +1,3 @@
-export interface Point {
-  x: number;
-  y: number;
-  label: string;
-}
-
-export interface ChartDimensions {
-  width: number;
-  height: number;
-  padTop: number;
-  padRight: number;
-  padBottom: number;
-  padLeft: number;
-}
-
 export function scaleLinear(domainMin: number, domainMax: number, rangeMin: number, rangeMax: number) {
   return (v: number) => rangeMin + ((v - domainMin) / (domainMax - domainMin)) * (rangeMax - rangeMin);
 }
