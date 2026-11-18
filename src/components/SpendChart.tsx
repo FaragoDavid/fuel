@@ -4,7 +4,7 @@ import type { Bar, Fillup, Period, PeriodTotal } from '../types';
 import { niceYTicks, scaleLinear } from '../utils/chart';
 import { BAR_CHART } from '../utils/consts';
 import { MONTHS, formatNum } from '../utils/format';
-import { LocalStorage } from '../utils/local-storage';
+import { useBarChartPeriod } from '../hooks/useBarChartPeriod';
 import { distributeByMonth, distributeByWeek, distributeByYear, weekStartLabel } from '../utils/period';
 
 const { WIDTH, HEIGHT, PAD, INNER_W, INNER_H, TOOLTIP_W, TOOLTIP_GAP, BAR_GAP } = BAR_CHART;
@@ -45,12 +45,7 @@ function buildYearLines(periods: PeriodTotal[], xStep: number): { x: number; yea
 }
 
 export default function SpendChart({ fillups, selectedYear }: { fillups: Fillup[]; selectedYear: number | null }) {
-  const [period, setPeriod] = useState<Period>(() => LocalStorage.getSpendPeriod() ?? 'hó');
-
-  function handlePeriod(p: Period) {
-    setPeriod(p);
-    LocalStorage.setSpendPeriod(p);
-  }
+  const [period, setPeriod] = useBarChartPeriod('spend');
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
 
   const { bars, gridLines, yearLines } = useMemo(() => {
@@ -75,13 +70,13 @@ export default function SpendChart({ fillups, selectedYear }: { fillups: Fillup[
   return (
     <div>
       <div className="chart-tabs" style={{ marginBottom: 8 }}>
-        <button onClick={() => handlePeriod('hó')} className={period === 'hó' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => setPeriod('hó')} className={period === 'hó' ? 'tab-btn-active' : 'tab-btn'}>
           Havi
         </button>
-        <button onClick={() => handlePeriod('hét')} className={period === 'hét' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => setPeriod('hét')} className={period === 'hét' ? 'tab-btn-active' : 'tab-btn'}>
           Heti
         </button>
-        <button onClick={() => handlePeriod('év')} className={period === 'év' ? 'tab-btn-active' : 'tab-btn'}>
+        <button onClick={() => setPeriod('év')} className={period === 'év' ? 'tab-btn-active' : 'tab-btn'}>
           Éves
         </button>
       </div>

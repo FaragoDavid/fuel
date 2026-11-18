@@ -1,9 +1,7 @@
-import { useState } from 'react';
-
 import type { Period, Unit } from '../types';
 import { PERIODS, UNITS } from '../utils/consts';
 import { formatNum } from '../utils/format';
-import { LocalStorage } from '../utils/local-storage';
+import { useCyclingRatePreferences } from '../hooks/useCyclingRatePreferences';
 
 interface Props {
   totalLiters: number;
@@ -14,18 +12,7 @@ interface Props {
 const PERIOD_DAYS: Record<Period, number> = { hét: 7, hó: 365.25 / 12, év: 365.25 };
 
 export default function CyclingRateStat({ totalLiters, totalKm, spanDays }: Props) {
-  const [unit, setUnit] = useState<Unit>(() => LocalStorage.getStatUnit() ?? 'l');
-  const [period, setPeriod] = useState<Period>(() => LocalStorage.getStatPeriod() ?? 'hó');
-
-  function changeUnit(u: Unit) {
-    setUnit(u);
-    LocalStorage.setStatUnit(u);
-  }
-
-  function changePeriod(p: Period) {
-    setPeriod(p);
-    LocalStorage.setStatPeriod(p);
-  }
+  const { unit, period, setUnit: changeUnit, setPeriod: changePeriod } = useCyclingRatePreferences();
 
   const total = unit === 'l' ? totalLiters : totalKm;
   const value = spanDays > 0 && total > 0 ? total / (spanDays / PERIOD_DAYS[period]) : null;
