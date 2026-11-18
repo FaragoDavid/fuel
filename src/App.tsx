@@ -1,5 +1,5 @@
 import { Plus } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import ChartPanel from './components/ChartPanel';
 import ConfirmDialog from './components/ConfirmDialog';
@@ -7,31 +7,17 @@ import FillupDialog from './components/FillupDialog';
 import FillupTable from './components/FillupTable';
 import Login from './components/Login';
 import StatsStrip from './components/StatsStrip';
-import { useStore } from './data/store';
+import { useFillups } from './hooks/useFillups';
 import { useAuth } from './services/auth';
 import type { Fillup } from './types';
-import { compareFillups } from './utils/sort';
 
 type DialogState = { mode: 'add' } | { mode: 'edit'; fillup: Fillup } | null;
 
 export default function App() {
-  const store = useStore();
   const user = useAuth();
-  const [fillups, setFillups] = useState<Fillup[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
-  const sortedFillups = useMemo(() => (fillups ? [...fillups].sort(compareFillups) : []), [fillups]);
-
+  const { loaded, sortedFillups, error, saving, addFillup, updateFillup, deleteFillup } = useFillups(user);
   const [dialog, setDialog] = useState<DialogState>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!user) return;
-    store
-      .readFillups()
-      .then(setFillups)
-      .catch((error) => setError(error.message));
-  }, [user]);
 
   function scrollToId(id: string) {
     const row = document.querySelector<HTMLElement>(`tr[data-id="${id}"]`);
@@ -43,39 +29,18 @@ export default function App() {
   }
 
   async function handleSave(fillup: Fillup) {
-    if (!fillups) return;
     setDialog(null);
-    setSaving(true);
-    setError(null);
-    try {
-      if (dialog?.mode === 'edit') {
-        await store.updateFillup(fillup);
-        setFillups(fillups.map((existing) => (existing.id === fillup.id ? fillup : existing)));
-      } else {
-        const { id: _ignored, ...data } = fillup;
-        const newId = await store.addFillup(data);
-        setFillups([...fillups, { ...data, id: newId }]);
-      }
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Mentési hiba');
-    } finally {
-      setSaving(false);
+    if (dialog?.mode === 'edit') {
+      await updateFillup(fillup);
+    } else {
+      const { id: _ignored, ...data } = fillup;
+      await addFillup(data);
     }
   }
 
   async function handleDelete(id: string) {
-    if (!fillups) return;
-    setSaving(true);
-    setError(null);
-    try {
-      await store.deleteFillup(id);
-      setFillups(fillups.filter((fillup) => fillup.id !== id));
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Törlési hiba');
-    } finally {
-      setSaving(false);
-      setDeleteId(null);
-    }
+    await deleteFillup(id);
+    setDeleteId(null);
   }
 
   if (user === undefined) return <div className="loading-text">Betöltés…</div>;
@@ -94,7 +59,7 @@ export default function App() {
 
         {error && <div className="error-banner">{error}</div>}
 
-        {fillups === null ? (
+        {!loaded ? (
           <div className="loading-text">Betöltés…</div>
         ) : (
           <>
