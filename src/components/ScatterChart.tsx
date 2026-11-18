@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
 import { scaleLinear, smoothLine, niceYTicks, rollingAverage } from '../utils/chart';
+import type { ScatterChartKey } from '../types';
 import type { ScatterPoint } from '../utils/derive-scatter-points';
+import { SCATTER_OPTIONS } from '../utils/chart-options';
 
 interface Props {
+  chartKey: ScatterChartKey;
   points: ScatterPoint[];
-  yUnit: string;
-  yDecimals?: number;
   trendWindow?: number;
   onPointClick?: (id: string) => void;
 }
@@ -19,7 +20,8 @@ const TOOLTIP_W = 110;
 const TOOLTIP_H = 34;
 const TOOLTIP_GAP = 12;
 
-export default function ScatterChart({ points, yUnit, yDecimals = 1, trendWindow = 5, onPointClick }: Props) {
+export default function ScatterChart({ chartKey, points, trendWindow = 5, onPointClick }: Props) {
+  const { yUnit, yDecimals } = SCATTER_OPTIONS[chartKey];
   const [tooltip, setTooltip] = useState<{ x: number; y: number; value: string; dateLine: string } | null>(null);
 
   const { scaledPoints, trendPath, yScale, yTicks } = useMemo(() => {

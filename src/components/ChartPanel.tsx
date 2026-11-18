@@ -1,26 +1,18 @@
 import { useMemo } from 'react';
 
 import { useChartPreferences } from '../hooks/useChartPreferences';
-import type { ChartOption, ChartType, Fillup } from '../types';
+import type { ChartType, Fillup } from '../types';
 import { deriveL100Points, deriveFtkmPoints, deriveFtlPoints } from '../utils/derive-scatter-points';
+import { CHART_OPTIONS } from '../utils/chart-options';
 import ScatterChart from './ScatterChart';
 import SpendChart from './SpendChart';
 import TabSelect from './TabSelect';
 import TravelDistanceChart from './TravelDistanceChart';
 
-const CHART_OPTIONS: readonly ChartOption[] = [
-  { key: 'liters_per_100_km', kind: 'scatter', label: 'Fogyasztás', yUnit: 'l/100km', yDecimals: 1 },
-  { key: 'huf_per_liter', kind: 'scatter', label: 'Üzemanyagár', yUnit: 'Ft/l', yDecimals: 0 },
-  { key: 'huf_per_km', kind: 'scatter', label: 'Kilométerköltség', yUnit: 'Ft/km', yDecimals: 0 },
-  { key: 'cost', kind: 'bar', label: 'Költség', BarComponent: SpendChart },
-  { key: 'travel_distance', kind: 'bar', label: 'Megtett km', BarComponent: TravelDistanceChart },
-];
-
 const CHART_SELECT_OPTIONS = CHART_OPTIONS.map(({ key, label }) => ({ value: key, label }));
 
 export default function ChartPanel({ sortedFillups, onPointClick }: { sortedFillups: Fillup[]; onPointClick: (id: string) => void }) {
   const { chartType, selectedYear, setChartType, setSelectedYear } = useChartPreferences();
-  const activeView = CHART_OPTIONS.find((v) => v.key === chartType)!;
 
   const availableYears = useMemo(() => [...new Set(sortedFillups.map(({ year }) => year))], [sortedFillups]);
 
@@ -29,19 +21,14 @@ export default function ChartPanel({ sortedFillups, onPointClick }: { sortedFill
     [availableYears],
   );
 
-  const filteredFillups = useMemo(
-    () => (selectedYear === null ? sortedFillups : sortedFillups.filter(({ year }) => year === selectedYear)),
-    [sortedFillups, selectedYear],
-  );
-
-  const scatterPoints = useMemo(
-    () => ({
-      liters_per_100_km: deriveL100Points(filteredFillups),
-      huf_per_liter: deriveFtlPoints(filteredFillups),
-      huf_per_km: deriveFtkmPoints(filteredFillups),
-    }),
-    [filteredFillups],
-  );
+  const scatterPoints = useMemo(() => {
+    const fillups = selectedYear === null ? sortedFillups : sortedFillups.filter(({ year }) => year === selectedYear);
+    return {
+      liters_per_100_km: deriveL100Points(fillups),
+      huf_per_liter: deriveFtlPoints(fillups),
+      huf_per_km: deriveFtkmPoints(fillups),
+    };
+  }, [sortedFillups, selectedYear]);
 
   return (
     <div className="card mb-6">
@@ -65,16 +52,12 @@ export default function ChartPanel({ sortedFillups, onPointClick }: { sortedFill
         />
       </div>
       <div className="chart-body">
-        {activeView.kind === 'bar' ? (
-          <activeView.BarComponent fillups={sortedFillups} selectedYear={selectedYear} />
+        {chartType === 'cost' ? (
+          <SpendChart fillups={sortedFillups} selectedYear={selectedYear} />
+        ) : chartType === 'travel_distance' ? (
+          <TravelDistanceChart fillups={sortedFillups} selectedYear={selectedYear} />
         ) : (
-          <ScatterChart
-            points={scatterPoints[activeView.key]}
-            yUnit={activeView.yUnit}
-            yDecimals={activeView.yDecimals}
-            trendWindow={10}
-            onPointClick={onPointClick}
-          />
+          <ScatterChart chartKey={chartType} points={scatterPoints[chartType]} trendWindow={10} onPointClick={onPointClick} />
         )}
       </div>
     </div>

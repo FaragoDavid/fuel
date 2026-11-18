@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
 import type { ChartType } from '../types';
+import { CHART_OPTIONS } from '../utils/chart-options';
 import { LocalStorage } from '../utils/local-storage';
 
-const VALID_CHART_TYPES = new Set<ChartType>(['liters_per_100_km', 'huf_per_liter', 'huf_per_km', 'cost', 'travel_distance']);
+const VALID_CHART_TYPES = new Set<ChartType>(CHART_OPTIONS.map((o) => o.key));
 
 export function useChartPreferences() {
   const [chartType, setChartTypeState] = useState<ChartType>(() => {

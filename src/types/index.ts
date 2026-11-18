@@ -1,5 +1,3 @@
-import type { ComponentType } from 'react';
-
 export interface Fillup {
   id: string;
   year: number;
@@ -24,24 +22,10 @@ export type ScatterChartKey = 'liters_per_100_km' | 'huf_per_liter' | 'huf_per_k
 export type BarChartKey = 'cost' | 'travel_distance';
 export type ChartType = ScatterChartKey | BarChartKey;
 
-export type BarChartComponent = ComponentType<{ fillups: Fillup[]; selectedYear: number | null }>;
-
-export interface ScatterOption {
-  readonly key: ScatterChartKey;
-  readonly kind: 'scatter';
+export interface ChartOption {
+  readonly key: ChartType;
   readonly label: string;
-  readonly yUnit: string;
-  readonly yDecimals: number;
 }
-
-export interface BarOption {
-  readonly key: BarChartKey;
-  readonly kind: 'bar';
-  readonly label: string;
-  readonly BarComponent: BarChartComponent;
-}
-
-export type ChartOption = ScatterOption | BarOption;
 
 export interface PeriodTotal {
   key: string;
